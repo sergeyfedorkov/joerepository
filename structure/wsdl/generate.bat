@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\Java\jdk1.8.0_91\bin\wsimport" D:\METAVIS\projects\structure\wsdl\authentication.wsdl -d "D:\METAVIS\projects\structure\src\main\java" -keep -extension
