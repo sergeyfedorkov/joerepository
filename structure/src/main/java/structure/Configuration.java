@@ -14,6 +14,7 @@ public class Configuration {
 	private String dropboxuser;
 	private String boxuser;
 	private String googleuser;
+	private String exchangeuser;
 
 	//#configuration of the target location
 	private String target;
@@ -103,8 +104,16 @@ public class Configuration {
 		return googleuser;
 	}
 	
+	public String getExchangeuser() {
+		return exchangeuser;
+	}
+	
 	public boolean isDeleteTarget() {
 		return deleteTarget;
+	}
+	
+	public boolean isExchange(){
+		return exchangeuser != null;
 	}
 	
 	public boolean isSharepoint(){
@@ -136,10 +145,11 @@ public class Configuration {
 		boolean googleResult = dropboxuser != null;
 		boolean dropboxResult = dropboxuser != null;
 		boolean boxResult = boxuser != null;
+		boolean exchangeResult = exchangeuser != null;
 		boolean sharepointResult = site != null;
-		boolean filesystemResult = !dropboxResult && !sharepointResult && !boxResult && !googleResult;
+		boolean filesystemResult = !dropboxResult && !sharepointResult && !boxResult && !googleResult && !exchangeResult;
 		
-		boolean result = commonResult && (filesystemResult || dropboxResult || sharepointResult || boxResult || googleResult);
+		boolean result = commonResult && (filesystemResult || dropboxResult || sharepointResult || boxResult || googleResult || exchangeResult);
 		if (!result){
 			StringBuffer buffer = new StringBuffer();
 			buffer.append("Application is not configured properly. Set up configuration in the structure.ini file\n");
@@ -148,6 +158,7 @@ public class Configuration {
 			buffer.append("''dropboxuser' - for dropbox or\n");
 			buffer.append("''boxuser' - for box or\n");
 			buffer.append("''googleuser' - for google or\n");
+			buffer.append("''exchangeuser' - for exchange or\n");
 			buffer.append("nothing - for file system\n");
 			
 			buffer.append("'target' - target location (fs directory, sharepoint library or dropbox folder)\n");

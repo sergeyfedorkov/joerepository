@@ -7,6 +7,7 @@ import utils.DebugProxySelector;
 import connectors.BoxConnector;
 import connectors.ClaimsConnector;
 import connectors.DropboxConnector;
+import connectors.ExchangeConnector;
 import connectors.GoogleConnector;
 
 public class Structure {
@@ -24,10 +25,19 @@ public class Structure {
 				box();
 			} else if (configuration.isGoogle()) {
 				google();
+			} else if (configuration.isExchange()) {
+				exchange();
 			} else {
 				filesystem();
 			}
 		}
+	}
+	
+	public static void exchange(){
+		ExchangeConnector connector = new ExchangeConnector().connect(configuration.getExchangeuser());
+		System.out.println(connector.getAccessToken());
+		if (connector.getAccessToken() == null) return;
+		//start(new FileBuilder().target(configuration.getTarget()).size(configuration.getSize()).token(connector.getToken()).user(configuration.getDropboxuser()).build());
 	}
 	
 	public static void filesystem(){
@@ -54,8 +64,8 @@ public class Structure {
 	
 	public static void box(){
 		BoxConnector connector = new BoxConnector().connect(configuration.getBoxuser());
-		if (connector.getApi() == null) return;
-		start(new FileBuilder().target(configuration.getTarget()).size(configuration.getSize()).api(connector.getApi()).build());
+		if (connector.getBoxApi() == null) return;
+		start(new FileBuilder().target(configuration.getTarget()).size(configuration.getSize()).api(connector.getBoxApi()).build());
 	}
 	
 	public static void start(GenericObject target){
