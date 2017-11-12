@@ -1,4 +1,4 @@
-package connectors;
+package connectors.oauth;
 
 public class DropboxConnector extends OAuthConnector{
 	public OAuthConnector connect(String username){

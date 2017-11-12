@@ -1,4 +1,4 @@
-package connectors;
+package connectors.oauth;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

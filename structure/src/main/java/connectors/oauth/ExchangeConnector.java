@@ -1,4 +1,4 @@
-package connectors;
+package connectors.oauth;
 
 public class ExchangeConnector extends OAuthConnector{
 	public static String resource = "https://outlook.office365.com";

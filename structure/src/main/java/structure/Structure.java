@@ -4,12 +4,12 @@ import java.net.ProxySelector;
 
 import objects.GenericObject;
 import utils.DebugProxySelector;
-import connectors.BoxConnector;
 import connectors.ClaimsConnector;
-import connectors.DropboxConnector;
-import connectors.ExchangeConnector;
 import connectors.GoogleConnector;
-import connectors.OAuthConnector;
+import connectors.oauth.BoxConnector;
+import connectors.oauth.DropboxConnector;
+import connectors.oauth.ExchangeConnector;
+import connectors.oauth.OAuthConnector;
 
 public class Structure {
 	private static Statistics statistics = Statistics.getInstance();

@@ -1,4 +1,4 @@
-package connectors;
+package connectors.oauth;
 
 import com.box.sdk.BoxAPIConnection;
 
