@@ -3,12 +3,11 @@ package connectors;
 public class ExchangeConnector extends OAuthConnector{
 	public static String resource = "https://outlook.office365.com";
 	
-	public ExchangeConnector connect(String username){
+	public OAuthConnector connect(String username){
 		String authParams = "resource="+resource+"&client_id="+getClientId()+"&response_type=code&redirect_uri="+getRedirectUri()+"&login_hint="+username;
 		String tokenParams = "grant_type=authorization_code&code={code}&client_id="+getClientId()+"&resource="+resource+"&redirect_uri="+getRedirectUri();
 		
-		openBrowser(authParams, tokenParams);
-		return this;
+		return openBrowser(authParams, tokenParams);
 	}
 	
 	@Override

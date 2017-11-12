@@ -9,6 +9,7 @@ import connectors.ClaimsConnector;
 import connectors.DropboxConnector;
 import connectors.ExchangeConnector;
 import connectors.GoogleConnector;
+import connectors.OAuthConnector;
 
 public class Structure {
 	private static Statistics statistics = Statistics.getInstance();
@@ -34,7 +35,7 @@ public class Structure {
 	}
 	
 	public static void exchange(){
-		ExchangeConnector connector = new ExchangeConnector().connect(configuration.getExchangeuser());
+		OAuthConnector connector = new ExchangeConnector().connect(configuration.getExchangeuser());
 		if (connector.getAccessToken() == null) return;
 		//start(new FileBuilder().target(configuration.getTarget()).size(configuration.getSize()).token(connector.getToken()).user(configuration.getDropboxuser()).build());
 	}
@@ -44,7 +45,7 @@ public class Structure {
 	}
 	
 	public static void dropbox(){
-		DropboxConnector connector = new DropboxConnector().connect(configuration.getBoxuser());
+		OAuthConnector connector = new DropboxConnector().connect(configuration.getDropboxuser());
 		if (connector.getAccessToken() == null) return;
 		start(new FileBuilder().target(configuration.getTarget()).size(configuration.getSize()).token(connector.getAccessToken()).user(configuration.getDropboxuser()).build());
 	}
@@ -62,9 +63,9 @@ public class Structure {
 	}
 	
 	public static void box(){
-		BoxConnector connector = new BoxConnector().connect(configuration.getBoxuser());
+		OAuthConnector connector = new BoxConnector().connect(configuration.getBoxuser());
 		if (connector.getAccessToken() == null) return;
-		start(new FileBuilder().target(configuration.getTarget()).size(configuration.getSize()).api(connector.getBoxApi()).build());
+		start(new FileBuilder().target(configuration.getTarget()).size(configuration.getSize()).api(((BoxConnector)connector).getBoxApi()).build());
 	}
 	
 	public static void start(GenericObject target){

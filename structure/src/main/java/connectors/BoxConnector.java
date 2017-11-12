@@ -3,12 +3,11 @@ package connectors;
 import com.box.sdk.BoxAPIConnection;
 
 public class BoxConnector extends OAuthConnector{
-	public BoxConnector connect(String username){
+	public OAuthConnector connect(String username){
 		String authParams = "response_type=code&client_id="+getClientId()+"&redirect_uri="+getRedirectUri()+"&box_login="+username;
 		String tokenParams = "grant_type=authorization_code&code={code}&client_id="+getClientId()+"&client_secret="+getSecretId();
 		
-		openBrowser(authParams, tokenParams);
-		return this;
+		return openBrowser(authParams, tokenParams);
 	}
 	
 	@Override

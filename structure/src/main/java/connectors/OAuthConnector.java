@@ -31,8 +31,9 @@ public abstract class OAuthConnector {
 	public abstract String getRedirectUri();
 	public abstract String getClientId();
 	public abstract String getSecretId();
+	public abstract OAuthConnector connect(String username);
 
-	public void openBrowser(String authParameters, final String tokenParameters){
+	public OAuthConnector openBrowser(String authParameters, final String tokenParameters){
 		final Shell dialog = new Shell(Display.getDefault());
 		
 		dialog.setText(getTitle());
@@ -60,6 +61,8 @@ public abstract class OAuthConnector {
 		while (!dialog.isDisposed()) {
 			if (!display.readAndDispatch()) display.sleep();
 		}
+		
+		return this;
 	}
 	
 	public String getAccessToken(){

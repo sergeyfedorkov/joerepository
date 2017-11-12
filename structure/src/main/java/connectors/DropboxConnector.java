@@ -1,12 +1,11 @@
 package connectors;
 
 public class DropboxConnector extends OAuthConnector{
-	public DropboxConnector connect(String username){
+	public OAuthConnector connect(String username){
 		String authParams = "client_id="+getClientId()+"&response_type=code&redirect_uri="+getRedirectUri();
 		String tokenParams = "grant_type=authorization_code&code={code}&client_id="+getClientId()+"&client_secret="+getSecretId()+"&redirect_uri="+getRedirectUri();
 				
-		openBrowser(authParams, tokenParams);
-		return this;
+		return openBrowser(authParams, tokenParams);
 	}
 	
 	@Override
