@@ -26,8 +26,11 @@ public abstract class OAuthConnector {
 	private Map<String, Object> response;
 	
 	public abstract String getTitle();
+	public abstract String getAuthorizationUrl(String parameters);
+	public abstract String getTokenUrl();
+	public abstract String getRedirectUri();
 
-	public void getBrowser(String oauthUrl, final String tokenUrl, final String parameters, final String redirectUrl){
+	public void openBrowser(String authParameters, final String tokenParameters){
 		final Shell dialog = new Shell(Display.getDefault());
 		
 		dialog.setText(getTitle());
@@ -35,12 +38,12 @@ public abstract class OAuthConnector {
 		
 		Browser browser = new Browser(dialog, SWT.NONE);
 		browser.setLayoutData(new GridData(GridData.FILL_BOTH));
-		browser.setUrl(oauthUrl);
+		browser.setUrl(getAuthorizationUrl(authParameters));
 		browser.addLocationListener(new LocationListener(){
-			public void changed(LocationEvent arg0) {
-				if (arg0.location.startsWith(redirectUrl) && arg0.location.indexOf(PATTERN_CODE) != -1){
+			public void changed(LocationEvent location) {
+				if (location.location.startsWith(getRedirectUri()) && location.location.indexOf(PATTERN_CODE) != -1){
 					dialog.close();
-					getTokens(tokenUrl, parameters.replaceAll("\\{code\\}", getCode(arg0.location)));
+					getTokens(getTokenUrl(), tokenParameters.replaceAll("\\{code\\}", getCode(location.location)));
 				}
 			}
 
@@ -57,6 +60,17 @@ public abstract class OAuthConnector {
 		}
 	}
 	
+	public String getAccessToken(){
+		return (String)response.get("access_token");
+	}
+	
+	public String getRefreshToken(){
+		return (String)response.get("refresh_token");
+	}
+	
+	/*
+	 * Private section
+	 */
 	private String getCode(String location){
 		String code = location.substring(location.indexOf(PATTERN_CODE)+PATTERN_CODE.length());
 		if (code.indexOf("&") != -1) code = code.substring(0, code.indexOf("&"));
@@ -86,9 +100,5 @@ public abstract class OAuthConnector {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-	}
-
-	public Map<String, Object> getResponse() {
-		return response;
 	}
 }

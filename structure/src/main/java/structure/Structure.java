@@ -11,7 +11,7 @@ import connectors.ExchangeConnector;
 import connectors.GoogleConnector;
 
 public class Structure {
-	private static Statistics statistics;
+	private static Statistics statistics = Statistics.getInstance();
 	private static Configuration configuration = Configuration.getInstance();
 	
 	public static void main(String[] args) {
@@ -35,7 +35,6 @@ public class Structure {
 	
 	public static void exchange(){
 		ExchangeConnector connector = new ExchangeConnector().connect(configuration.getExchangeuser());
-		System.out.println(connector.getAccessToken());
 		if (connector.getAccessToken() == null) return;
 		//start(new FileBuilder().target(configuration.getTarget()).size(configuration.getSize()).token(connector.getToken()).user(configuration.getDropboxuser()).build());
 	}
@@ -46,8 +45,8 @@ public class Structure {
 	
 	public static void dropbox(){
 		DropboxConnector connector = new DropboxConnector().connect(configuration.getBoxuser());
-		if (connector.getToken() == null) return;
-		start(new FileBuilder().target(configuration.getTarget()).size(configuration.getSize()).token(connector.getToken()).user(configuration.getDropboxuser()).build());
+		if (connector.getAccessToken() == null) return;
+		start(new FileBuilder().target(configuration.getTarget()).size(configuration.getSize()).token(connector.getAccessToken()).user(configuration.getDropboxuser()).build());
 	}
 	
 	public static void google(){
@@ -64,7 +63,7 @@ public class Structure {
 	
 	public static void box(){
 		BoxConnector connector = new BoxConnector().connect(configuration.getBoxuser());
-		if (connector.getBoxApi() == null) return;
+		if (connector.getAccessToken() == null) return;
 		start(new FileBuilder().target(configuration.getTarget()).size(configuration.getSize()).api(connector.getBoxApi()).build());
 	}
 	
@@ -72,7 +71,6 @@ public class Structure {
 		if (configuration.isDeleteTarget() && target.exist()) target.remove();
 		if (!target.exist()) target.target();
 		
-		statistics = Statistics.getInstance();
 		structure(target, 0);
 		statistics.print();
 	}
