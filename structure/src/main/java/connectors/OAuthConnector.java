@@ -29,6 +29,8 @@ public abstract class OAuthConnector {
 	public abstract String getAuthorizationUrl(String parameters);
 	public abstract String getTokenUrl();
 	public abstract String getRedirectUri();
+	public abstract String getClientId();
+	public abstract String getSecretId();
 
 	public void openBrowser(String authParameters, final String tokenParameters){
 		final Shell dialog = new Shell(Display.getDefault());
