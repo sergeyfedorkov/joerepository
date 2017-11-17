@@ -6,6 +6,7 @@ import java.util.Random;
 
 import javax.xml.ws.soap.SOAPFaultException;
 
+import structure.Configuration;
 import structure.SoapParser;
 import structure.Statistics;
 import utils.Utils;
@@ -14,38 +15,24 @@ public abstract class GenericObject extends File {
 	private static final long serialVersionUID = -6978073793316037363L;
 	
 	private Statistics statistics;
+	private Configuration configuration;
 	private int size;
 	private String target;
 
-	public GenericObject(String pathname, String target, int size, Statistics statistics) {
+	public GenericObject(String pathname, String target, int size, Statistics statistics, Configuration configuration) {
 		super(pathname);
-		setTarget(target);
-		setSize(size);
-		setStatistics(statistics);
-	}
-
-	public Statistics getStatistics() {
-		return statistics;
-	}
-
-	public void setStatistics(Statistics statistics) {
-		this.statistics = statistics;
+		this.target=target;
+		this.size=size;
+		this.statistics=statistics;
+		this.configuration=configuration;
 	}
 
 	public int getSize() {
 		return size;
 	}
 
-	public void setSize(int size) {
-		this.size = size;
-	}
-
 	public String getTarget() {
 		return target;
-	}
-
-	public void setTarget(String target) {
-		this.target = target;
 	}
 	
 	public byte[] getBytes(){
@@ -73,7 +60,8 @@ public abstract class GenericObject extends File {
 			error = e.getMessage();
 			return false;
 		} finally {
-			Utils.print(getPath(), getTarget(), " - remove - "+getTimeContainer(date)+(error != null?(" - "+error):""));
+			String time = getTimeContainer(date);
+			if (configuration == null || configuration.isPrint()) Utils.print(getPath(), getTarget(), " - remove - "+time+(error != null?(" - "+error):""));
 		}
 	}
 	
@@ -90,7 +78,8 @@ public abstract class GenericObject extends File {
 			error = e.getMessage();
 			return false;
 		} finally {
-			Utils.print(getPath(), getTarget(), " - check - "+getTimeContainer(date)+(error != null?(" - "+error):""));
+			String time = getTimeContainer(date);
+			if (configuration == null || configuration.isPrint()) Utils.print(getPath(), getTarget(), " - check - "+time+(error != null?(" - "+error):""));
 		}
 	}
 	
@@ -107,7 +96,8 @@ public abstract class GenericObject extends File {
 			error = e.getMessage();
 			return false;
 		} finally {
-			Utils.print(getPath(), getTarget(), " - create - "+getTimeContainer(date)+(error != null?(" - "+error):"")+"\n");
+			String time = getTimeContainer(date);
+			if (configuration == null || configuration.isPrint()) Utils.print(getPath(), getTarget(), " - create - "+time+(error != null?(" - "+error):"")+"\n");
 		}
 	}
 	
@@ -124,7 +114,8 @@ public abstract class GenericObject extends File {
 			error = e.getMessage();
 			return false;
 		} finally {
-			Utils.print(getPath(), getTarget(), " - "+getTimeContent(date)+(error != null?(" - "+error):""));
+			String time = getTimeContent(date);
+			if (configuration == null || configuration.isPrint()) Utils.print(getPath(), getTarget(), " - "+time+(error != null?(" - "+error):""));
 		}
 	}
 	
@@ -141,15 +132,16 @@ public abstract class GenericObject extends File {
 			error = e.getMessage();
 			return false;
 		} finally {
-			Utils.print(getPath(), getTarget(), " - "+getTimeContainer(date)+(error != null?(" - "+error):""));
+			String time = getTimeContainer(date);
+			if (configuration == null || configuration.isPrint()) Utils.print(getPath(), getTarget(), " - "+time+(error != null?(" - "+error):""));
 		}
 	}
 	
 	private String getTimeContainer(Date date){
-		return Statistics.getTimeElapsed(getStatistics() == null?new Date().getTime()-date.getTime():getStatistics().addContainer(date));
+		return Statistics.getTimeElapsed(statistics == null?new Date().getTime()-date.getTime():statistics.addContainer(date));
 	}
 	
 	private String getTimeContent(Date date){
-		return Statistics.getTimeElapsed(getStatistics() == null?new Date().getTime()-date.getTime():getStatistics().addContent(date));
+		return Statistics.getTimeElapsed(statistics == null?new Date().getTime()-date.getTime():statistics.addContent(date));
 	}
 }

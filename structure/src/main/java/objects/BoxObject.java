@@ -2,6 +2,7 @@ package objects;
 
 import java.io.ByteArrayInputStream;
 
+import structure.Configuration;
 import structure.Statistics;
 
 import com.box.sdk.BoxAPIConnection;
@@ -14,10 +15,10 @@ public class BoxObject extends GenericObject{
 	private BoxFolder parent;
 	private BoxFolder folder;
 
-	public BoxObject(String pathname, String target, int size, Statistics statistics, BoxAPIConnection api, BoxFolder parent) {
-		super(pathname, target, size, statistics);
+	public BoxObject(String pathname, String target, int size, Statistics statistics, Configuration configuration, BoxAPIConnection api, Object parent) {
+		super(pathname, target, size, statistics, configuration);
 		this.api = api;
-		this.parent=parent;
+		this.parent=(BoxFolder)parent;
 	}
 	
 	@Override

@@ -32,6 +32,9 @@ public class Configuration {
 	//#configuration whether delete target location or not
 	private boolean deleteTarget;
 	
+	//#configuration of whether to print process or not
+	private boolean print;
+	
 	private static Configuration instance;
 	
 	public static synchronized Configuration getInstance(){
@@ -47,18 +50,15 @@ public class Configuration {
 			while((line = reader.readLine()) != null){
 				if (line.startsWith("#") || line.isEmpty()) continue;
 				
-				String fieldName = line.split("=")[0];
-				String fieldValue = line.split("=")[1];
-				
-				Field field = this.getClass().getDeclaredField(fieldName);
+				Field field = this.getClass().getDeclaredField(line.split("=")[0]);
 				field.setAccessible(true);
 				
 				if (field.getType().getTypeName().equals("boolean")){
-					field.set(this, Boolean.parseBoolean(fieldValue));
+					field.set(this, Boolean.TRUE);
 				} else if (field.getType().getTypeName().equals("int")){
-					field.set(this, Integer.parseInt(fieldValue));
+					field.set(this, Integer.parseInt(line.split("=")[1]));
 				} else {
-					field.set(this, fieldValue);
+					field.set(this, line.split("=")[1]);
 				}
 			}
 		}catch(Exception e){
@@ -110,6 +110,10 @@ public class Configuration {
 	
 	public boolean isDeleteTarget() {
 		return deleteTarget;
+	}
+	
+	public boolean isPrint() {
+		return print;
 	}
 	
 	public boolean isExchange(){

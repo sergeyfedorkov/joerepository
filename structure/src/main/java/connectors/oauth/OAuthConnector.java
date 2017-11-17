@@ -32,6 +32,10 @@ public abstract class OAuthConnector {
 	public abstract String getClientId();
 	public abstract String getSecretId();
 	public abstract OAuthConnector connect(String username);
+	
+	public void refresh(String parameters){
+		tokens(parameters);
+	}
 
 	public OAuthConnector openBrowser(String authParameters, final String tokenParameters){
 		final Shell dialog = new Shell(Display.getDefault());
@@ -46,7 +50,7 @@ public abstract class OAuthConnector {
 			public void changed(LocationEvent location) {
 				if (location.location.startsWith(getRedirectUri()) && location.location.indexOf(PATTERN_CODE) != -1){
 					dialog.close();
-					getTokens(getTokenUrl(), tokenParameters.replaceAll("\\{code\\}", getCode(location.location)));
+					tokens(tokenParameters.replaceAll("\\{code\\}", getCode(location.location)));
 				}
 			}
 
@@ -83,9 +87,9 @@ public abstract class OAuthConnector {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void getTokens(String tokenUrl, String parameters){
+	private void tokens(String parameters){
 		try{
-			URLConnection connection = new URL(tokenUrl).openConnection();
+			URLConnection connection = new URL(getTokenUrl()).openConnection();
 			connection.setDoOutput(true);
 			((HttpURLConnection)connection).setRequestMethod("POST");
 			connection.addRequestProperty("Content-Length", parameters.getBytes().length+"");
@@ -100,8 +104,7 @@ public abstract class OAuthConnector {
 			String inputStr;
 			while ((inputStr = streamReader.readLine()) != null) responseStrBuilder.append(inputStr);
 			
-			ObjectMapper mapper = new ObjectMapper();
-			response = (Map<String, Object>)mapper.readValue(responseStrBuilder.toString(), HashMap.class);
+			response = (Map<String, Object>)new ObjectMapper().readValue(responseStrBuilder.toString(), HashMap.class);
 		}catch(Exception e){
 			e.printStackTrace();
 		}

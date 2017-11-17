@@ -9,7 +9,6 @@ import objects.SharepointObject;
 import utils.Utils;
 
 import com.box.sdk.BoxAPIConnection;
-import com.box.sdk.BoxFolder;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 
 public class FileBuilder {
@@ -18,6 +17,8 @@ public class FileBuilder {
 	private String target;
 	private int size;
 	private Statistics statistics;
+	private Configuration configuration;
+	private Object parent;
 	
 	//sharepoint
 	private String site;
@@ -29,22 +30,21 @@ public class FileBuilder {
 	
 	//box
 	private BoxAPIConnection api;
-	private BoxFolder parent;
 	
 	//google
 	private GoogleCredential credentials;
 	
 	public GenericObject build(){
 		if (claims != null){
-			return new SharepointObject(path, target, size, site, statistics, claims);
+			return new SharepointObject(path, target, size, site, statistics, configuration, claims);
 		} else if (token != null) {
-			return new DropboxObject(path, target, size, statistics, user, token);
+			return new DropboxObject(path, target, size, statistics, configuration, user, token);
 		} else if (api != null) {
-			return new BoxObject(path, target, size, statistics, api, parent);
+			return new BoxObject(path, target, size, statistics, configuration, api, parent);
 		} else if (credentials != null){
-			return new GoogleObject(path, target, size, statistics, credentials);
+			return new GoogleObject(path, target, size, statistics, configuration, credentials, parent);
 		} else {
-			return new FileSystemObject(path, target, size, statistics);
+			return new FileSystemObject(path, target, size, statistics, configuration);
 		}
 	}
 	
@@ -64,6 +64,7 @@ public class FileBuilder {
 		} else if (parent instanceof GoogleObject){
 			GoogleObject object = (GoogleObject)parent;
 			credentials(object.getCredential());
+			parent(object.getFolder());
 		}
 		
 		target(parent.getTarget());
@@ -112,7 +113,7 @@ public class FileBuilder {
 		return this;
 	}
 	
-	public FileBuilder parent(BoxFolder parent){
+	public FileBuilder parent(Object parent){
 		this.parent=parent;
 		return this;
 	}
@@ -124,6 +125,11 @@ public class FileBuilder {
 	
 	public FileBuilder statistics(Statistics statistics){
 		this.statistics=statistics;
+		return this;
+	}
+	
+	public FileBuilder configuration(Configuration configuration){
+		this.configuration=configuration;
 		return this;
 	}
 }

@@ -1,16 +1,20 @@
 package objects;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
+import org.apache.commons.io.FileUtils;
+
+import structure.Configuration;
 import structure.Statistics;
-import utils.Utils;
 
 public class FileSystemObject extends GenericObject {
 	private static final long serialVersionUID = 265552533095450746L;
 
-	public FileSystemObject(String pathname, String target, int size, Statistics statistics) {
-		super(pathname, target, size, statistics);
+	public FileSystemObject(String pathname, String target, int size, Statistics statistics, Configuration configuration) {
+		super(pathname, target, size, statistics, configuration);
 	}
 	
 	public boolean checkTarget(){
@@ -31,23 +35,26 @@ public class FileSystemObject extends GenericObject {
 		return mkdirs();
 	}
 	
-	public boolean removeTarget(){
-		if (isDirectory()) Utils.deleteFolder(this);
-		return super.delete();
+	public boolean removeTarget() throws IOException{
+		FileUtils.forceDelete(new File(getPath()));
+		return true;
 	}
 	
 	/*
 	 * Private Section 
 	 */
 	private void populate(){
-		FileOutputStream stream = null;
+		OutputStream stream = null;
 		
 		try{
 			stream = new FileOutputStream(getPath());
 			stream.write(getBytes());
 		}catch(Exception e){
 			try{
-				if (stream != null) stream.close();
+				if (stream != null) {
+					stream.flush();
+					stream.close();
+				}
 			}catch(Exception e1){}
 		}
 	}

@@ -13,12 +13,12 @@ import java.util.Map;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import structure.Configuration;
 import structure.SoapParser;
 import structure.Statistics;
 import utils.Utils;
 
 import com.microsoft.schemas.sharepoint.soap.UpdateListItems;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import connectors.ClaimsConnector;
 import connectors.ListsConnector;
@@ -32,8 +32,8 @@ public class SharepointObject extends GenericObject {
 	private String claims;
 	private String site;
 	
-	public SharepointObject(String pathname, String target, int size, String siteUrl, Statistics statistics, String claims) {
-		super(pathname, target, size, statistics);
+	public SharepointObject(String pathname, String target, int size, String siteUrl, Statistics statistics, Configuration configuration, String claims) {
+		super(pathname, target, size, statistics, configuration);
 		this.site=siteUrl;
 		this.claims=claims;
 	}
@@ -77,8 +77,7 @@ public class SharepointObject extends GenericObject {
 			URLConnection conn = new URL(url.replaceAll(" ", "%20")).openConnection();
 			((HttpURLConnection)conn).setRequestMethod("PUT");
 		    conn.setDoOutput(true);
-			//conn.setRequestProperty(ClaimsConnector.HTTP_HEADER_COOKIE, claims);
-		    conn.setRequestProperty("Authorization", "Basic " + Base64.encode(("joe@metavistech.com:43046721Jo").getBytes()));
+			conn.setRequestProperty(ClaimsConnector.HTTP_HEADER_COOKIE, claims);
 
 		    out = conn.getOutputStream();
 		    out.write(getBytes());

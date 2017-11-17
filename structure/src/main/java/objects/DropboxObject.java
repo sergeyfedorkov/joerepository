@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import structure.Configuration;
 import structure.Statistics;
 import utils.Utils;
 
@@ -21,8 +22,8 @@ public class DropboxObject extends GenericObject {
 	private String token;
 	private String user;
 	
-	public DropboxObject(String path, String target, int size, Statistics statistics, String user, String token) {
-		super(path, target, size, statistics);
+	public DropboxObject(String path, String target, int size, Statistics statistics, Configuration configuration, String user, String token) {
+		super(path, target, size, statistics, configuration);
 		this.user=user;
 		this.token=token;
 	}

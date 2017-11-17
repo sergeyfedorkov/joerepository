@@ -1,7 +1,5 @@
 package utils;
 
-import java.io.File;
-
 public class Utils {
 	public static final String SEPARATOR = "/";
 	
@@ -28,12 +26,5 @@ public class Utils {
 	public static String apply(String path){
 		if (path.startsWith("\\") || path.startsWith(SEPARATOR)) path = path.substring(1, path.length());
 		return path.replaceAll("\\\\", SEPARATOR);
-	}
-	
-	public static void deleteFolder(File folder) {
-		for (File child:folder.listFiles()) {
-			if (child.isDirectory()) deleteFolder(child);
-			child.delete();
-		}
 	}
 }

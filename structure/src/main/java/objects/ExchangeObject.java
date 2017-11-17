@@ -1,12 +1,13 @@
 package objects;
 
+import structure.Configuration;
 import structure.Statistics;
 
 public class ExchangeObject extends GenericObject {
 	private static final long serialVersionUID = 1433225130072719515L;
 
-	public ExchangeObject(String pathname, String target, int size, Statistics statistics) {
-		super(pathname, target, size, statistics);
+	public ExchangeObject(String pathname, String target, int size, Statistics statistics, Configuration configuration) {
+		super(pathname, target, size, statistics, configuration);
 	}
 
 	@Override

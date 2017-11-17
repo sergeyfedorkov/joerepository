@@ -30,7 +30,7 @@ public class Lists
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("file:/D:/METAVIS/projects/structure/wsdl/Lists.wsdl");
+            url = new URL("file:/D:/GIT/structure/wsdl/Lists.wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }
