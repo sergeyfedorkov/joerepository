@@ -1,14 +1,12 @@
 package objects;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.commons.io.FileUtils;
-
 import structure.Configuration;
 import structure.Statistics;
+import utils.Utils;
 
 public class FileSystemObject extends GenericObject {
 	private static final long serialVersionUID = 265552533095450746L;
@@ -35,9 +33,9 @@ public class FileSystemObject extends GenericObject {
 		return mkdirs();
 	}
 	
-	public boolean removeTarget() throws IOException{
-		FileUtils.forceDelete(new File(getPath()));
-		return true;
+	public boolean removeTarget(){
+		if (isDirectory()) Utils.deleteFolder(this);
+		return super.delete();
 	}
 	
 	/*
