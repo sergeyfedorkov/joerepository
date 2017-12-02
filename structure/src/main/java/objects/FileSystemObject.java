@@ -11,7 +11,7 @@ import utils.Utils;
 public class FileSystemObject extends GenericObject {
 	private static final long serialVersionUID = 265552533095450746L;
 
-	public FileSystemObject(String pathname, String target, int size, Statistics statistics, Configuration configuration) {
+	public FileSystemObject(String pathname, String target, long size, Statistics statistics, Configuration configuration) {
 		super(pathname, target, size, statistics, configuration);
 	}
 	

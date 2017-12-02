@@ -22,7 +22,7 @@ public class GoogleObject extends GenericObject {
 	private File parent;
 	private File folder;
 
-	public GoogleObject(String pathname, String target, int size, Statistics statistics, Configuration configuration, GoogleCredential credentials, Object parent) {
+	public GoogleObject(String pathname, String target, long size, Statistics statistics, Configuration configuration, GoogleCredential credentials, Object parent) {
 		super(pathname, target, size, statistics, configuration);
 		this.credential = credentials;
 		this.parent = (File)parent;

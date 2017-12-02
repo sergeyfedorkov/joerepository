@@ -9,6 +9,13 @@ public class Configuration {
 	private static final String PLACEHOLDER_LEVEL = "%level%";
 	private static final String PLACEHOLDER_INDEX = "%index%";
 	
+	private static final String B = "b";
+	private static final String KB = "kb";
+	private static final String MB = "mb";
+	private static final String GB = "gb";
+	
+	private static int MAX = 100;
+	
 	//#configuration of the target server
 	private String site;
 	private String dropboxuser;
@@ -23,7 +30,11 @@ public class Configuration {
 	private int deep;
 	private int folders;
 	private int documents;
-	private int size;
+	private long size;
+	
+	private int totalFolders;
+	private int totalDocuments;
+	private String totalSize;
 
 	//#configuration of the container/content names
 	private String contentFormat;
@@ -69,18 +80,65 @@ public class Configuration {
 	}
 
 	public int getDeep() {
+		if (totalFolders != 0){
+			for (int deep=1;deep<MAX;deep++){
+				long result = 0;
+				for (int j=1;j<=deep;j++) result += Math.pow(deep, j);
+				
+				if (result>totalFolders) {
+					this.deep = deep;
+					return deep;
+				}
+			}
+		}
+		
 		return deep;
 	}
 
 	public int getFolders() {
+		if (totalFolders != 0){
+			for (int deep=1;deep<MAX;deep++){
+				long result = 0;
+				for (int j=1;j<=deep;j++) result += Math.pow(deep, j);
+				
+				if (result>totalFolders) {
+					this.deep = deep;
+					return deep;
+				}
+			}
+		}
 		return folders;
 	}
 
 	public int getDocuments() {
+		if (totalDocuments != 0){
+			return totalDocuments/totalFolders;
+		}
 		return documents;
 	}
 
-	public int getSize() {
+	public long getSize() {
+		if (totalSize != null){
+			long index = 1;
+			long value = 0;
+			
+			if (totalSize.toLowerCase().indexOf(KB) != -1){
+				value = Long.parseLong(totalSize.toLowerCase().replaceAll(KB, "").trim());
+				index = 1024;
+			} else if (totalSize.toLowerCase().indexOf(MB) != -1){
+				value = Long.parseLong(totalSize.toLowerCase().replaceAll(MB, "").trim());
+				index = 1024*1024;
+			} else if (totalSize.toLowerCase().indexOf(GB) != -1){
+				value = Long.parseLong(totalSize.toLowerCase().replaceAll(GB, "").trim());
+				index = 1024*1024*1024;
+			} else if (totalSize.toLowerCase().indexOf(B) != -1){
+				value = Long.parseLong(totalSize.toLowerCase().replaceAll(B, "").trim());
+			} else {
+				value = Long.parseLong(totalSize);
+			}
+			
+			return (value*index)/totalDocuments;
+		}
 		return size;
 	}
 
@@ -145,7 +203,8 @@ public class Configuration {
 	}
 	
 	public boolean validate(){
-		boolean commonResult = target != null && deep != 0 && folders != 0 && documents != 0 && size != 0;
+		boolean commonResult = target != null;
+		boolean structureResut = (deep != 0 && folders != 0 && documents != 0 && size != 0)||(totalFolders != 0 && totalDocuments != 0 && totalSize != null);
 		boolean googleResult = dropboxuser != null;
 		boolean dropboxResult = dropboxuser != null;
 		boolean boxResult = boxuser != null;
@@ -153,7 +212,7 @@ public class Configuration {
 		boolean sharepointResult = site != null;
 		boolean filesystemResult = !dropboxResult && !sharepointResult && !boxResult && !googleResult && !exchangeResult;
 		
-		boolean result = commonResult && (filesystemResult || dropboxResult || sharepointResult || boxResult || googleResult || exchangeResult);
+		boolean result = commonResult && structureResut && (filesystemResult || dropboxResult || sharepointResult || boxResult || googleResult || exchangeResult);
 		if (!result){
 			StringBuffer buffer = new StringBuffer();
 			buffer.append("Application is not configured properly. Set up configuration in the structure.ini file\n");
@@ -188,5 +247,17 @@ public class Configuration {
 		}
 		
 		return result;
+	}
+
+	public int getTotalFolders() {
+		return totalFolders;
+	}
+
+	public int getTotalDocuments() {
+		return totalDocuments;
+	}
+
+	public String getTotalSize() {
+		return totalSize;
 	}
 }

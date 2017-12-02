@@ -15,7 +15,7 @@ public class BoxObject extends GenericObject{
 	private BoxFolder parent;
 	private BoxFolder folder;
 
-	public BoxObject(String pathname, String target, int size, Statistics statistics, Configuration configuration, BoxAPIConnection api, Object parent) {
+	public BoxObject(String pathname, String target, long size, Statistics statistics, Configuration configuration, BoxAPIConnection api, Object parent) {
 		super(pathname, target, size, statistics, configuration);
 		this.api = api;
 		this.parent=(BoxFolder)parent;

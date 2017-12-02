@@ -15,7 +15,7 @@ public class FileBuilder {
 	//common
 	private String path = "";
 	private String target;
-	private int size;
+	private long size;
 	private Statistics statistics;
 	private Configuration configuration;
 	private Object parent;
@@ -118,7 +118,7 @@ public class FileBuilder {
 		return this;
 	}
 
-	public FileBuilder size(int size) {
+	public FileBuilder size(long size) {
 		this.size = size;
 		return this;
 	}

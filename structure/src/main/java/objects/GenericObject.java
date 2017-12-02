@@ -16,10 +16,10 @@ public abstract class GenericObject extends File {
 	
 	private Statistics statistics;
 	private Configuration configuration;
-	private int size;
+	private long size;
 	private String target;
 
-	public GenericObject(String pathname, String target, int size, Statistics statistics, Configuration configuration) {
+	public GenericObject(String pathname, String target, long size, Statistics statistics, Configuration configuration) {
 		super(pathname);
 		this.target=target;
 		this.size=size;
@@ -27,7 +27,7 @@ public abstract class GenericObject extends File {
 		this.configuration=configuration;
 	}
 
-	public int getSize() {
+	public long getSize() {
 		return size;
 	}
 
@@ -36,7 +36,7 @@ public abstract class GenericObject extends File {
 	}
 	
 	public byte[] getBytes(){
-		byte content[] = new byte[getSize()];
+		byte content[] = new byte[(int)getSize()];
 		new Random().nextBytes(content);
 		return content;
 	}

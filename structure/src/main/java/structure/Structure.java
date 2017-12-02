@@ -77,8 +77,12 @@ public class Structure {
 	}
 	
 	private static void structure(GenericObject parent, int level){
+		if (statistics.end(configuration)) return;
+		
 		if (level != configuration.getDeep()) {
 			for (int index=0;index<configuration.getFolders();index++){
+				if (statistics.end(configuration)) return;
+				
 				GenericObject folder = new FileBuilder().parent(parent).path(configuration.getContainerName(index, level)).statistics(statistics).configuration(configuration).build();
 				if (folder.container()) structure(folder, level+1);
 			}
@@ -88,7 +92,10 @@ public class Structure {
 	}
 	
 	private static void content(GenericObject parent, int level){
+		if (statistics.end(configuration)) return;
+		
 		for (int index=0;index<configuration.getDocuments();index++){
+			if (statistics.end(configuration)) return;
 			new FileBuilder().parent(parent).path(configuration.getContentName(index, level)).statistics(statistics).configuration(configuration).build().content();
 		}
 	}

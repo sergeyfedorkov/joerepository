@@ -22,7 +22,7 @@ public class DropboxObject extends GenericObject {
 	private String token;
 	private String user;
 	
-	public DropboxObject(String path, String target, int size, Statistics statistics, Configuration configuration, String user, String token) {
+	public DropboxObject(String path, String target, long size, Statistics statistics, Configuration configuration, String user, String token) {
 		super(path, target, size, statistics, configuration);
 		this.user=user;
 		this.token=token;

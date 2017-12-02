@@ -32,7 +32,7 @@ public class SharepointObject extends GenericObject {
 	private String claims;
 	private String site;
 	
-	public SharepointObject(String pathname, String target, int size, String siteUrl, Statistics statistics, Configuration configuration, String claims) {
+	public SharepointObject(String pathname, String target, long size, String siteUrl, Statistics statistics, Configuration configuration, String claims) {
 		super(pathname, target, size, statistics, configuration);
 		this.site=siteUrl;
 		this.claims=claims;

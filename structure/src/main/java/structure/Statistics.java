@@ -55,4 +55,8 @@ public class Statistics {
 		folders.add(result);
 		return result;
 	}
+	
+	public boolean end(Configuration configuration){
+		return documents.size() >= configuration.getTotalDocuments();
+	}
 }
