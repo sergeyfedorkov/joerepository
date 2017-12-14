@@ -1,15 +1,13 @@
 package objects;
 
 import java.io.File;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-import javax.xml.ws.soap.SOAPFaultException;
-
-import structure.Configuration;
-import structure.SoapParser;
 import structure.Statistics;
 import utils.Utils;
+import configuration.Configuration;
 
 public abstract class GenericObject extends File {
 	private static final long serialVersionUID = -6978073793316037363L;
@@ -18,6 +16,7 @@ public abstract class GenericObject extends File {
 	private Configuration configuration;
 	private long size;
 	private String target;
+	private List<GenericObject> children = new ArrayList<GenericObject>();
 
 	public GenericObject(String pathname, String target, long size, Statistics statistics, Configuration configuration) {
 		super(pathname);
@@ -26,6 +25,10 @@ public abstract class GenericObject extends File {
 		this.statistics=statistics;
 		this.configuration=configuration;
 	}
+	
+	public List<GenericObject> getChildren() {
+		return children;
+	}
 
 	public long getSize() {
 		return size;
@@ -33,6 +36,18 @@ public abstract class GenericObject extends File {
 
 	public String getTarget() {
 		return target;
+	}
+	
+	public Statistics getStatistics() {
+		return statistics;
+	}
+
+	public Configuration getConfiguration() {
+		return configuration;
+	}
+	
+	public void setStatistics(Statistics statistics){
+		this.statistics=statistics;
 	}
 	
 	public byte[] getBytes(){
@@ -46,102 +61,73 @@ public abstract class GenericObject extends File {
 	public abstract boolean createTarget() throws Exception;
 	public abstract boolean checkTarget() throws Exception;
 	public abstract boolean removeTarget() throws Exception;
+	public abstract void retrieveChildren() throws Exception;
 	
 	public boolean remove(){
-		String error = null;
-		Date date = new Date();
+		if (configuration.isPrint()) Utils.print(getPath(), getTarget(), " - remove - ");
 		
-		try{
-			return removeTarget();
-		} catch(SOAPFaultException e){
-			error = SoapParser.getErrorText(e.getFault());
-			return false;
-		} catch (Exception e){
-			error = e.getMessage();
-			return false;
-		} finally {
-			String time = getTimeContainer(date);
-			if (configuration == null || configuration.isPrint()) Utils.print(getPath(), getTarget(), " - remove - "+time+(error != null?(" - "+error):""));
-		}
+		return (Boolean)new OverloadHandler(statistics, configuration.isPrint()){
+			public Object method() throws Exception{
+				return removeTarget();
+			}
+		}.run(true);
 	}
 	
 	public boolean exist(){
-		String error = null;
-		Date date = new Date();
+		if (configuration.isPrint()) Utils.print(getPath(), getTarget(), " - check - ");
 		
-		try{
-			return checkTarget();
-		} catch(SOAPFaultException e){
-			error = SoapParser.getErrorText(e.getFault());
-			return false;
-		} catch (Exception e){
-			error = e.getMessage();
-			return false;
-		} finally {
-			String time = getTimeContainer(date);
-			if (configuration == null || configuration.isPrint()) Utils.print(getPath(), getTarget(), " - check - "+time+(error != null?(" - "+error):""));
-		}
+		return (Boolean)new OverloadHandler(statistics, configuration.isPrint()){
+			public Object method() throws Exception{
+				return checkTarget();
+			}
+		}.run(true);
 	}
 	
 	public boolean target(){
-		String error = null;
-		Date date = new Date();
+		if (configuration.isPrint()) Utils.print(getPath(), getTarget(), " - create - ");
 		
-		try{
-			return createTarget();
-		} catch(SOAPFaultException e){
-			error = SoapParser.getErrorText(e.getFault());
-			return false;
-		} catch (Exception e){
-			error = e.getMessage();
-			return false;
-		} finally {
-			String time = getTimeContainer(date);
-			if (configuration == null || configuration.isPrint()) Utils.print(getPath(), getTarget(), " - create - "+time+(error != null?(" - "+error):"")+"\n");
-		}
+		return (Boolean)new OverloadHandler(statistics, configuration.isPrint()){
+			public Object method() throws Exception{
+				return createTarget();
+			}
+		}.run(true);
 	}
 	
 	public boolean content(){
-		String error = null;
-		Date date = new Date();
+		if (configuration.isPrint()) Utils.print(getPath(), getTarget(), " - ");
 		
-		try{
-			return createContent();
-		} catch(SOAPFaultException e){
-			error = SoapParser.getErrorText(e.getFault());
-			return false;
-		} catch (Exception e){
-			error = e.getMessage();
-			return false;
-		} finally {
-			String time = getTimeContent(date);
-			if (configuration == null || configuration.isPrint()) Utils.print(getPath(), getTarget(), " - "+time+(error != null?(" - "+error):""));
-		}
+		return (Boolean)new OverloadHandler(statistics, configuration.isPrint()){
+			public Object method() throws Exception{
+				return createContent();
+			}
+		}.run(false);
 	}
 	
 	public boolean container(){
-		String error = null;
-		Date date = new Date();
+		if (configuration.isPrint()) Utils.print(getPath(), getTarget(), " - ");
 		
-		try{
-			return createContainer();
-		} catch(SOAPFaultException e){
-			error = SoapParser.getErrorText(e.getFault());
-			return false;
-		} catch (Exception e){
-			error = e.getMessage();
-			return false;
-		} finally {
-			String time = getTimeContainer(date);
-			if (configuration == null || configuration.isPrint()) Utils.print(getPath(), getTarget(), " - "+time+(error != null?(" - "+error):""));
+		return (Boolean)new OverloadHandler(statistics, configuration.isPrint()){
+			public Object method() throws Exception{
+				return createContainer();
+			}
+		}.run(true);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<GenericObject> children(){
+		boolean print = !getName().isEmpty() && !getName().equalsIgnoreCase(getTarget()) && !Utils.apply(getPath()).equalsIgnoreCase(getTarget()) && configuration.isPrint();
+		if (print) {
+			Utils.print(getPath(), getTarget(), " - ");
+			if (isDirectory()) Utils.print("children - ");
 		}
-	}
-	
-	private String getTimeContainer(Date date){
-		return Statistics.getTimeElapsed(statistics == null?new Date().getTime()-date.getTime():statistics.addContainer(date));
-	}
-	
-	private String getTimeContent(Date date){
-		return Statistics.getTimeElapsed(statistics == null?new Date().getTime()-date.getTime():statistics.addContent(date));
+		
+		Object result = new OverloadHandler(statistics, print){
+			public Object method() throws Exception{
+				if (isDirectory()) retrieveChildren();
+				return getChildren();
+			}
+		}.run(isDirectory());
+		
+		return result instanceof Boolean?new ArrayList<GenericObject>():(List<GenericObject>)result;
 	}
 }

@@ -17,6 +17,10 @@ public class ListsConnector {
 		((BindingProvider)soap).getRequestContext().put(MessageContext.HTTP_REQUEST_HEADERS, reqHeaders);
 		reqHeaders.set(ClaimsConnector.HTTP_HEADER_COOKIE, claims);
 		
+//		List<Handler> chain = new ArrayList<Handler>();
+//		chain.add(new WebserviceHandler());
+//		((BindingProvider)soap).getBinding().setHandlerChain(chain);
+		
 		return soap;
 	}
 }

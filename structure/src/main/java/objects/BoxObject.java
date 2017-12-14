@@ -2,18 +2,21 @@ package objects;
 
 import java.io.ByteArrayInputStream;
 
-import structure.Configuration;
 import structure.Statistics;
+import utils.Utils;
 
 import com.box.sdk.BoxAPIConnection;
 import com.box.sdk.BoxFolder;
 import com.box.sdk.BoxItem;
+import com.box.sdk.BoxResource;
+
+import configuration.Configuration;
 
 public class BoxObject extends GenericObject{
 	private static final long serialVersionUID = -6407870180519307013L;
 	private BoxAPIConnection api;
 	private BoxFolder parent;
-	private BoxFolder folder;
+	private BoxResource resource;
 
 	public BoxObject(String pathname, String target, long size, Statistics statistics, Configuration configuration, BoxAPIConnection api, Object parent) {
 		super(pathname, target, size, statistics, configuration);
@@ -23,7 +26,7 @@ public class BoxObject extends GenericObject{
 	
 	@Override
 	public boolean createContainer() throws Exception {
-		folder = parent.createFolder(getName()).getResource();
+		resource = parent.createFolder(getName()).getResource();
 		return true;
 	}
 
@@ -35,19 +38,19 @@ public class BoxObject extends GenericObject{
 
 	@Override
 	public boolean createTarget() throws Exception {
-		folder = BoxFolder.getRootFolder(api).createFolder(getTarget()).getResource();
+		resource = BoxFolder.getRootFolder(api).createFolder(getTarget()).getResource();
 		return true;
 	}
 
 	@Override
 	public boolean checkTarget() throws Exception {
-		folder = getTargetFolder();
-		return folder != null;
+		resource = getTargetFolder();
+		return resource != null;
 	}
 
 	@Override
 	public boolean removeTarget() throws Exception {
-		folder.delete(true);
+		((BoxFolder)resource).delete(true);
 		return true;
 	}
 
@@ -55,18 +58,34 @@ public class BoxObject extends GenericObject{
 		return api;
 	}
 	
-	public BoxFolder getFolder() {
-		return folder == null?BoxFolder.getRootFolder(api):folder;
+	public BoxResource getFolder() {
+		return resource == null?BoxFolder.getRootFolder(api):resource;
+	}
+	
+	public boolean isDirectory(){
+		return resource instanceof BoxFolder;
+	}
+	
+	public void retrieveChildren() throws Exception {
+		for (BoxItem.Info itemInfo:(BoxFolder)resource) {
+			BoxObject object = new BoxObject(getPath()+Utils.SEPARATOR+itemInfo.getName(), getTarget(), getSize(), getStatistics(), getConfiguration(), api, resource);
+			object.setResource(itemInfo.getResource());
+			getChildren().add(object);
+		}
 	}
 	
 	/*
 	 * private section
 	 */
 	private BoxFolder getTargetFolder(){
-		for (BoxItem.Info item:BoxFolder.getRootFolder(api).getChildren()){
+		for (BoxItem.Info item:BoxFolder.getRootFolder(api)){
 			if (item.getName().equalsIgnoreCase(getTarget())) return (BoxFolder)item.getResource();
 		}
 		
 		return null;
+	}
+
+	private void setResource(BoxResource resource) {
+		this.resource = resource;
 	}
 }

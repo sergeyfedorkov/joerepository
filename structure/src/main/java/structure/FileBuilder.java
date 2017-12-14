@@ -11,6 +11,8 @@ import utils.Utils;
 import com.box.sdk.BoxAPIConnection;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 
+import configuration.Configuration;
+
 public class FileBuilder {
 	//common
 	private String path = "";
@@ -67,6 +69,7 @@ public class FileBuilder {
 			parent(object.getFolder());
 		}
 		
+		configuration(parent.getConfiguration());
 		target(parent.getTarget());
 		size(parent.getSize());
 		path(parent.getPath());

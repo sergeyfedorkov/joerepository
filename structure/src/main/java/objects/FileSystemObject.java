@@ -1,12 +1,14 @@
 package objects;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collections;
 
-import structure.Configuration;
 import structure.Statistics;
 import utils.Utils;
+import configuration.Configuration;
 
 public class FileSystemObject extends GenericObject {
 	private static final long serialVersionUID = 265552533095450746L;
@@ -36,6 +38,14 @@ public class FileSystemObject extends GenericObject {
 	public boolean removeTarget(){
 		if (isDirectory()) Utils.deleteFolder(this);
 		return super.delete();
+	}
+	
+	public void retrieveChildren(){
+		File files[] = listFiles();
+		if(files == null) return;
+		
+		for (File child:files) getChildren().add(new FileSystemObject(getPath()+Utils.SEPARATOR+child.getName(), getTarget(), getSize(), getStatistics(), getConfiguration()));
+		Collections.sort(getChildren(), new ObjectsComparator());
 	}
 	
 	/*

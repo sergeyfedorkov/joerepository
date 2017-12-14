@@ -4,15 +4,19 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import structure.Configuration;
 import structure.Statistics;
 import utils.Utils;
 
 import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.DbxTeamClientV2;
+import com.dropbox.core.v2.files.FolderMetadata;
+import com.dropbox.core.v2.files.ListFolderResult;
+import com.dropbox.core.v2.files.Metadata;
 import com.dropbox.core.v2.team.TeamMemberInfo;
 import com.dropbox.core.v2.team.UserSelectorArg;
+
+import configuration.Configuration;
 
 public class DropboxObject extends GenericObject {
 	private static final long serialVersionUID = -547277363906329224L;
@@ -21,6 +25,7 @@ public class DropboxObject extends GenericObject {
 	
 	private String token;
 	private String user;
+	private Metadata metadata;
 	
 	public DropboxObject(String path, String target, long size, Statistics statistics, Configuration configuration, String user, String token) {
 		super(path, target, size, statistics, configuration);
@@ -52,6 +57,26 @@ public class DropboxObject extends GenericObject {
 		return true;
 	}
 	
+	public boolean isDirectory(){
+		return metadata == null || metadata instanceof FolderMetadata;
+	}
+	
+	public void retrieveChildren() throws Exception {
+		ListFolderResult result = getClient().files().listFolder(Utils.SEPARATOR+getTarget()+Utils.SEPARATOR+Utils.apply(getPath()));
+		while (true) {
+			for (Metadata metadata:result.getEntries()){
+				DropboxObject object = new DropboxObject(getPath()+Utils.SEPARATOR+metadata.getName(), getTarget(), getSize(), getStatistics(), getConfiguration(), user, token);
+				object.setMetadata(metadata);
+				
+				getChildren().add(object);
+			}
+			
+			if (!result.getHasMore()) break;
+			
+			result = getClient().files().listFolderContinue(result.getCursor());
+		}
+	}
+	
 	public DbxClientV2 getClient() throws Exception{
 		if (client != null) return client;
 		
@@ -76,5 +101,9 @@ public class DropboxObject extends GenericObject {
 	 */
 	private DbxTeamClientV2 getTeamClient(){
 		return new DbxTeamClientV2(config, token);
+	}
+
+	private void setMetadata(Metadata metadata) {
+		this.metadata = metadata;
 	}
 }

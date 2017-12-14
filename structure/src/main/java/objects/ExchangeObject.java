@@ -1,6 +1,6 @@
 package objects;
 
-import structure.Configuration;
+import configuration.Configuration;
 import structure.Statistics;
 
 public class ExchangeObject extends GenericObject {
@@ -38,5 +38,10 @@ public class ExchangeObject extends GenericObject {
 	public boolean removeTarget() throws Exception {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void retrieveChildren() throws Exception {
+		// TODO Auto-generated method stub
 	}
 }

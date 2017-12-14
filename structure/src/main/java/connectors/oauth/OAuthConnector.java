@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class OAuthConnector {
 	private static final String PATTERN_CODE = "code=";
-	private Map<String, Object> response;
+	public Map<String, Object> response;
 	
 	public abstract String getTitle();
 	public abstract String getAuthorizationUrl(String parameters);
@@ -37,18 +37,18 @@ public abstract class OAuthConnector {
 		tokens(parameters);
 	}
 
-	public OAuthConnector openBrowser(String authParameters, final String tokenParameters){
+	public OAuthConnector openBrowser(final String authParameters, final String tokenParameters){
 		final Shell dialog = new Shell(Display.getDefault());
 		
 		dialog.setText(getTitle());
 		dialog.setLayout(new GridLayout(1, false));
 		
-		Browser browser = new Browser(dialog, SWT.NONE);
+		final Browser browser = new Browser(dialog, SWT.NONE);
 		browser.setLayoutData(new GridData(GridData.FILL_BOTH));
 		browser.setUrl(getAuthorizationUrl(authParameters));
 		browser.addLocationListener(new LocationListener(){
 			public void changed(LocationEvent location) {
-				if (location.location.startsWith(getRedirectUri()) && location.location.indexOf(PATTERN_CODE) != -1){
+				if (location.location.indexOf(getRedirectUri()) != -1 && location.location.indexOf(PATTERN_CODE) != -1){
 					dialog.close();
 					tokens(tokenParameters.replaceAll("\\{code\\}", getCode(location.location)));
 				}

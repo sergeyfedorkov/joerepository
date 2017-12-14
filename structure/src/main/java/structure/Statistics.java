@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import configuration.Configuration;
+
 public class Statistics {
 	private static Statistics instance = null;
 	
@@ -23,11 +25,15 @@ public class Statistics {
 	public void print(){
 		System.out.println("\nStatistics:");
 		
-		long foldersAvarage = (long)folders.stream().mapToLong(p -> p.longValue()).average().getAsDouble();
-		System.out.println("Number of Folders created: "+folders.size()+". Average time: "+getTimeElapsed(foldersAvarage));
+		if (folders.size() != 0){
+			long foldersAvarage = (long)folders.stream().mapToLong(p -> p.longValue()).average().getAsDouble();
+			System.out.println("Number of Folders: "+folders.size()+". Average time: "+getTimeElapsed(foldersAvarage));
+		}
 		
-		long documentsAvarage = (long)documents.stream().mapToLong(p -> p.longValue()).average().getAsDouble();
-		System.out.println("Number of Documents created: "+documents.size()+". Average time: "+getTimeElapsed(documentsAvarage));
+		if (documents.size() != 0) {
+			long documentsAvarage = (long)documents.stream().mapToLong(p -> p.longValue()).average().getAsDouble();;
+			System.out.println("Number of Documents: "+documents.size()+". Average time: "+getTimeElapsed(documentsAvarage));
+		}
 		
 		System.out.println("Total time consumed: "+getTimeElapsed(new Date().getTime()-startDate.getTime()));
 	}
@@ -57,6 +63,7 @@ public class Statistics {
 	}
 	
 	public boolean end(Configuration configuration){
+		if (configuration.getTotalDocuments() == 0) return false;
 		return documents.size() >= configuration.getTotalDocuments();
 	}
 }

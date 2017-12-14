@@ -2,10 +2,13 @@ package objects;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import structure.Configuration;
 import structure.Statistics;
+import utils.Utils;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.InputStreamContent;
@@ -14,6 +17,8 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+
+import configuration.Configuration;
 
 public class GoogleObject extends GenericObject {
 	private static final long serialVersionUID = 4368340431019705735L;
@@ -98,5 +103,37 @@ public class GoogleObject extends GenericObject {
 	
 	private Drive getService(){
 		return new Drive.Builder(new NetHttpTransport(), new JacksonFactory(), credential).setApplicationName("application name").build();
+	}
+
+	@Override
+	public void retrieveChildren() throws Exception {
+		String query = String.format("'%s' in parents and trashed = false", folder.getId());
+		List<File> result = new ArrayList<File>();
+		
+		com.google.api.services.drive.Drive.Files.List request = getService().files().list();
+		request.setQ(query);
+		
+		do {
+			FileList list = (FileList)request.execute();
+			for(File file : list.getFiles()) result.add(file);
+			
+			request.setPageToken(list.getNextPageToken());
+		} while(request.getPageToken() != null && request.getPageToken().length() > 0);
+		
+		for (File file:result){
+			GoogleObject object = new GoogleObject(getPath()+Utils.SEPARATOR+file.getName(), getTarget(), getSize(), getStatistics(), getConfiguration(), credential, folder);
+			object.setFolder(file);
+			getChildren().add(object);
+		}
+		
+		Collections.sort(getChildren(), new ObjectsComparator());
+	}
+	
+	public boolean isDirectory(){
+		return folder.getMimeType() == null || folder.getMimeType().equalsIgnoreCase(MIME_TYPE);
+	}
+
+	public void setFolder(File folder) {
+		this.folder = folder;
 	}
 }

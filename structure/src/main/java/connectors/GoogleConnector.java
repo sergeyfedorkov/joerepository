@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.browser.TitleEvent;
-import org.eclipse.swt.browser.TitleListener;
+import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
@@ -19,10 +19,10 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.DriveScopes;
 
 public class GoogleConnector {
-	private String client_id = "101140258396.apps.googleusercontent.com";
-	private String client_secret = "dF0TBt2M_owgVyluMd4J8mVE";
+	private String client_id = "561924198087-griq6plpss1q6p7fd55cg2r70b106mnd.apps.googleusercontent.com";
+	private String client_secret = "2Ul7BJjQ6r4fgtXUNTFIlvsa";
 	
-	private static final String OAUTH2_REDIRECT_URL = "urn:ietf:wg:oauth:2.0:oob";
+	private static final String OAUTH2_REDIRECT_URL = "https://www.joe.com/test";
 	public static final String[] DRIVE_SCOPES = new String[] {DriveScopes.DRIVE, DriveScopes.DRIVE_FILE};
 	
 	private String code;
@@ -44,14 +44,19 @@ public class GoogleConnector {
 		Browser browser = new Browser(dialog, SWT.NONE);
 		browser.setLayoutData(new GridData(GridData.FILL_BOTH));
 		browser.setUrl(flow.newAuthorizationUrl().setRedirectUri(OAUTH2_REDIRECT_URL).build() + getLoginHintOption(username));
-		browser.addTitleListener(new TitleListener() {
+		browser.addLocationListener(new LocationListener(){
+
 			@Override
-			public void changed(TitleEvent event) {
-				if (event.title.contains("code=")) {
-					code = getValueOf(event.title, "code");
+			public void changing(LocationEvent event) {}
+
+			@Override
+			public void changed(LocationEvent event) {
+				if (event.location.startsWith(OAUTH2_REDIRECT_URL)) {
+					code = getValueOf(event.location, "code");
 					dialog.close();
 				}
 			}
+			
 		});
 
 		dialog.setSize(800, 800);

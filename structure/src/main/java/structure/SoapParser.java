@@ -59,7 +59,7 @@ public class SoapParser {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		return result != null?result.replaceAll("\n", "").replaceAll("\t", ""):null;
+		return result != null?result.replaceAll("\n", "").replaceAll("\\s{2,}", " "):null;
 	}
 	
 	public static String getErrorCode(Object xml) {
