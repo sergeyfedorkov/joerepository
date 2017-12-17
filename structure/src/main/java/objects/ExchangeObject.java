@@ -41,7 +41,8 @@ public class ExchangeObject extends GenericObject {
 	}
 
 	@Override
-	public void retrieveChildren() throws Exception {
+	public boolean retrieveChildren() throws Exception {
 		// TODO Auto-generated method stub
+		return false;
 	}
 }

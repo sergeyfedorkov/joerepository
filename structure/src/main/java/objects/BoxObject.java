@@ -66,12 +66,14 @@ public class BoxObject extends GenericObject{
 		return resource instanceof BoxFolder;
 	}
 	
-	public void retrieveChildren() throws Exception {
+	public boolean retrieveChildren() throws Exception {
 		for (BoxItem.Info itemInfo:(BoxFolder)resource) {
 			BoxObject object = new BoxObject(getPath()+Utils.SEPARATOR+itemInfo.getName(), getTarget(), getSize(), getStatistics(), getConfiguration(), api, resource);
 			object.setResource(itemInfo.getResource());
 			getChildren().add(object);
 		}
+		
+		return true;
 	}
 	
 	/*

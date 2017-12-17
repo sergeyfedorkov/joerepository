@@ -61,7 +61,7 @@ public abstract class GenericObject extends File {
 	public abstract boolean createTarget() throws Exception;
 	public abstract boolean checkTarget() throws Exception;
 	public abstract boolean removeTarget() throws Exception;
-	public abstract void retrieveChildren() throws Exception;
+	public abstract boolean retrieveChildren() throws Exception;
 	
 	public boolean remove(){
 		if (configuration.isPrint()) Utils.print(getPath(), getTarget(), " - remove - ");
@@ -113,21 +113,17 @@ public abstract class GenericObject extends File {
 		}.run(true);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<GenericObject> children(){
 		boolean print = !getName().isEmpty() && !getName().equalsIgnoreCase(getTarget()) && !Utils.apply(getPath()).equalsIgnoreCase(getTarget()) && configuration.isPrint();
-		if (print) {
-			Utils.print(getPath(), getTarget(), " - ");
-			if (isDirectory()) Utils.print("children - ");
-		}
+		if (print) Utils.print(getPath(), getTarget(), " - ");
+		if (print && isDirectory()) Utils.print("children - ");
 		
-		Object result = new OverloadHandler(statistics, print){
+		new OverloadHandler(statistics, print){
 			public Object method() throws Exception{
-				if (isDirectory()) retrieveChildren();
-				return getChildren();
+				return isDirectory()?retrieveChildren():null;
 			}
 		}.run(isDirectory());
 		
-		return result instanceof Boolean?new ArrayList<GenericObject>():(List<GenericObject>)result;
+		return getChildren();
 	}
 }

@@ -74,8 +74,9 @@ public class SharepointObject extends GenericObject {
 	}
 	
 	@Override
-	public void retrieveChildren() throws Exception {
+	public boolean retrieveChildren() throws Exception {
 		parseChildren(ListsConnector.getService(site, claims).getListItems(getTarget(), null, getQuery(), getViewFields(), "2000", getQueryOptions(), null).getContent());
+		return true;
 	}
 	
 	public String getClaims() {

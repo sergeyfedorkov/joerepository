@@ -40,12 +40,13 @@ public class FileSystemObject extends GenericObject {
 		return super.delete();
 	}
 	
-	public void retrieveChildren(){
+	public boolean retrieveChildren(){
 		File files[] = listFiles();
-		if(files == null) return;
+		if(files == null) return false;
 		
 		for (File child:files) getChildren().add(new FileSystemObject(getPath()+Utils.SEPARATOR+child.getName(), getTarget(), getSize(), getStatistics(), getConfiguration()));
 		Collections.sort(getChildren(), new ObjectsComparator());
+		return true;
 	}
 	
 	/*

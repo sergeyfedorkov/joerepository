@@ -14,40 +14,36 @@ import connectors.oauth.ExchangeConnector;
 import connectors.oauth.OAuthConnector;
 
 public class Structure {
-	private static Configuration configuration = Configuration.getInstance();
+	private static Configuration configuration = Configuration.open();
 	
 	public static void main(String[] args) {
-		ProxySelector.setDefault(new DebugProxySelector());
-		if (configuration.validate()){
-			if (configuration.isSharepoint()){
-				sharepoint();
-			} else if (configuration.isDropbox()){
-				dropbox();
-			} else if (configuration.isBox()){
-				box();
-			} else if (configuration.isGoogle()) {
-				google();
-			} else if (configuration.isExchange()) {
-				exchange();
-			} else {
-				filesystem();
-			}
+		if (configuration == null) return;
+		if (configuration.isProxy()) ProxySelector.setDefault(new DebugProxySelector());
+		if (configuration.isSharepoint()){
+			sharepoint();
+		} else if (configuration.isDropbox()){
+			dropbox();
+		} else if (configuration.isBox()){
+			box();
+		} else if (configuration.isGoogle()) {
+			google();
+		} else if (configuration.isExchange()) {
+			exchange();
+		} else if (configuration.isFileSystem()){
+			filesystem();
 		}
 	}
 	
 	public static void exchange(){
-		Utils.print("----------Exchange");
 		OAuthConnector connector = new ExchangeConnector().connect(configuration.getExchangeuser());
 		if (connector.getAccessToken() == null) return;
 	}
 	
 	public static void filesystem(){
-		Utils.print("----------FileSystem");
 		start(new FileBuilder().path(configuration.getTarget()).target(configuration.getTarget()).size(configuration.getSize()).configuration(configuration).build());
 	}
 	
 	public static void dropbox(){
-		Utils.print("----------Dropbox");
 		//OAuthConnector connector = new DropboxConnector().connect(configuration.getDropboxuser());
 		DropboxConnectorApi connector = new DropboxConnectorApi().connect(configuration.getDropboxuser());
 		//if (connector.getAccessToken() == null) return;
@@ -56,35 +52,33 @@ public class Structure {
 	}
 	
 	public static void google(){
-		Utils.print("----------Google");
 		GoogleConnector connector = new GoogleConnector().connect(configuration.getGoogleuser());
 		if (connector.getCredential() == null) return;
 		start(new FileBuilder().target(configuration.getTarget()).size(configuration.getSize()).credentials(connector.getCredential()).configuration(configuration).build());
 	}
 	
 	public static void sharepoint(){
-		Utils.print("----------Sharepoint");
 		String claims = new ClaimsConnector().claims(configuration.getSite());
 		if (claims == null) return;
 		start(new FileBuilder().target(configuration.getTarget()).size(configuration.getSize()).site(configuration.getSite()).claims(claims).configuration(configuration).build());
 	}
 	
 	public static void box(){
-		Utils.print("----------Box");
 		OAuthConnector connector = new BoxConnector().connect(configuration.getBoxuser());
 		if (connector.getAccessToken() == null) return;
 		start(new FileBuilder().target(configuration.getTarget()).size(configuration.getSize()).api(((BoxConnector)connector).getBoxApi()).configuration(configuration).build());
 	}
 	
 	public static void start(GenericObject target){
+		Utils.print(configuration.getTitle()+"\n");
+		Utils.breakline();
+		
 		if (configuration.isRead()){
-			Utils.print("----------Read\n\n");
 			if (!target.exist()) return;
 			
 			Utils.breakline();
 			read(target);
 		} else {
-			Utils.print("----------Create\n\n");
 			if (configuration.isDeleteTarget() && target.exist()) target.remove();
 			if (!target.exist()) target.target();
 			

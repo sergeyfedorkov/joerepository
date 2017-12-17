@@ -106,7 +106,7 @@ public class GoogleObject extends GenericObject {
 	}
 
 	@Override
-	public void retrieveChildren() throws Exception {
+	public boolean retrieveChildren() throws Exception {
 		String query = String.format("'%s' in parents and trashed = false", folder.getId());
 		List<File> result = new ArrayList<File>();
 		
@@ -127,6 +127,8 @@ public class GoogleObject extends GenericObject {
 		}
 		
 		Collections.sort(getChildren(), new ObjectsComparator());
+		
+		return true;
 	}
 	
 	public boolean isDirectory(){

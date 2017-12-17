@@ -61,7 +61,7 @@ public class DropboxObject extends GenericObject {
 		return metadata == null || metadata instanceof FolderMetadata;
 	}
 	
-	public void retrieveChildren() throws Exception {
+	public boolean retrieveChildren() throws Exception {
 		ListFolderResult result = getClient().files().listFolder(Utils.SEPARATOR+getTarget()+Utils.SEPARATOR+Utils.apply(getPath()));
 		while (true) {
 			for (Metadata metadata:result.getEntries()){
@@ -75,6 +75,8 @@ public class DropboxObject extends GenericObject {
 			
 			result = getClient().files().listFolderContinue(result.getCursor());
 		}
+		
+		return true;
 	}
 	
 	public DbxClientV2 getClient() throws Exception{
