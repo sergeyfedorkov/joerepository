@@ -94,6 +94,9 @@ public class Configuration{
 	@ConfigurationAnnotation(type = "Other Options", name="Enable Proxy")
 	private boolean proxy;
 	
+	@ConfigurationAnnotation(type = "Other Options", name="Print to Console")
+	private boolean console = true;
+	
 	public Configuration(String name){
 		this.name=name;
 	}

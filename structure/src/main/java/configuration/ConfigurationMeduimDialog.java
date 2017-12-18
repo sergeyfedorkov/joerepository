@@ -82,7 +82,7 @@ public class ConfigurationMeduimDialog extends Dialog {
 			
 			Group group = new Group(parent, SWT.NONE);
 			group.setLayoutData(new GridData(GridData.FILL_BOTH));
-			group.setLayout(new GridLayout(type.equalsIgnoreCase("Other Options")?4:2, false));
+			group.setLayout(new GridLayout(type.equalsIgnoreCase("Other Options")?6:2, false));
 			group.setText(type);
 			groups.put(type, group);
 		}
@@ -93,7 +93,7 @@ public class ConfigurationMeduimDialog extends Dialog {
 	protected void createStatusControls(Shell parent){
 		Composite statusComposite = new Composite(parent, SWT.NONE);
 		statusComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		statusComposite.setLayout(new GridLayout(3, false));
+		statusComposite.setLayout(new GridLayout(4, false));
 		((GridData)statusComposite.getLayoutData()).grabExcessHorizontalSpace = true;
 		((GridLayout)statusComposite.getLayout()).marginTop=-5;
 		((GridLayout)statusComposite.getLayout()).marginRight=-5;
@@ -108,10 +108,23 @@ public class ConfigurationMeduimDialog extends Dialog {
 		((GridLayout)emptyComposite.getLayout()).marginTop=-35;
 		
 		save = new Button(statusComposite, SWT.NONE);
-		save.setText("Save and Run");
+		save.setText("Save");
 		save.addSelectionListener(new SelectionListener(){
 			public void widgetSelected(SelectionEvent e) {
-				configuration = getConfiguration().save();
+				Configuration configuration = getConfiguration().save();
+				if (action()) {
+					setConfiguration(configuration);
+					parent.close();
+				}
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {}
+		});
+		
+		Button cancel = new Button(statusComposite, SWT.NONE);
+		cancel.setText("Cancel");
+		cancel.addSelectionListener(new SelectionListener(){
+			public void widgetSelected(SelectionEvent e) {
 				parent.close();
 			}
 
@@ -152,5 +165,14 @@ public class ConfigurationMeduimDialog extends Dialog {
 	protected boolean confirm(){
 		MessageDialog dialog = new MessageDialog(getParent(), "Delete", null, "Do you really want to delete this configuration?", MessageDialog.QUESTION, new String[] {IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL}, IDialogConstants.YES_ID);
 		return dialog.open() == 0;
+	}
+	
+	protected boolean action(){
+		MessageDialog dialog = new MessageDialog(getParent(), "Select Action", null, "Configuration is saved. Do you want to run it?", MessageDialog.QUESTION, new String[] {IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL}, IDialogConstants.YES_ID);
+		return dialog.open() == 0;
+	}
+
+	public void setConfiguration(Configuration configuration) {
+		this.configuration = configuration;
 	}
 }
