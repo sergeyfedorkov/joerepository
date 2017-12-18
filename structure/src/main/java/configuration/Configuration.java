@@ -18,6 +18,7 @@ public class Configuration{
 	public static final String STORE = "configurations";
 	public static final String EXTENSION = ".conf";
 	public static final String NEW = "";
+	//public static final String UNSAVED = " (unsaved)";
 	
 	private static final String PLACEHOLDER_LEVEL = "%level%";
 	private static final String PLACEHOLDER_INDEX = "%index%";
@@ -161,6 +162,10 @@ public class Configuration{
 		}
 		
 		return this;
+	}
+	
+	public boolean saved(){
+		return new File(Configuration.STORE+Utils.SEPARATOR+getName()+EXTENSION).exists();
 	}
 	
 	public String rename(String oldName){
@@ -376,6 +381,9 @@ public class Configuration{
 		for (Field field:getFields()){
 			if (getFieldValue(field) == null) continue;
 			Object value = getFieldValue(field);
+			if (field.getGenericType().toString().equals("int") || field.getGenericType().toString().equals("long")){
+				if (Long.parseLong(value.toString()) == 0) continue;
+			}
 		
 			if (value instanceof Boolean){
 				if ((Boolean)value){
@@ -400,6 +408,7 @@ public class Configuration{
 		if (isFileSystem()) result+="FileSystem,";
 		
 		result+=(isRead()?"Read":"Create");
+		result+=(saved()?"":" (unsaved)");
 		return result;
 	}
 
