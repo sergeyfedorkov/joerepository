@@ -63,11 +63,12 @@ public class ConfigurationDialog extends ConfigurationMeduimDialog {
 		delete.setEnabled(false);
 	}
 	
-	private void createConfiguration(boolean add){
+	private boolean createConfiguration(boolean add){
 		if (add) add();
 		
 		combo.select(0);
 		combo.notifyListeners(SWT.Selection, null);
+		return add;
 	}
 	
 	private void createContent(Shell parent){
@@ -104,6 +105,7 @@ public class ConfigurationDialog extends ConfigurationMeduimDialog {
 			public void widgetSelected(SelectionEvent e) {
 				createConfiguration(true);
 				changeName.notifyListeners(SWT.Selection, null);
+				validate();
 			}
 
 			public void widgetDefaultSelected(SelectionEvent e) {}
@@ -119,7 +121,8 @@ public class ConfigurationDialog extends ConfigurationMeduimDialog {
 					combo.setData(configuration.getName(), null);
 					combo.remove(combo.indexOf(configuration.getName()));
 					
-					createConfiguration(combo.getItemCount() == 0);
+					boolean add = createConfiguration(combo.getItemCount() == 0);
+					if (add) changeName.notifyListeners(SWT.Selection, null);
 					validate();
 				}
 			}
