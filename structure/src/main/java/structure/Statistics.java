@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import structure.configuration.Configuration;
 import utils.Utils;
-import configuration.Configuration;
 
 public class Statistics {
 	private static Statistics instance = null;

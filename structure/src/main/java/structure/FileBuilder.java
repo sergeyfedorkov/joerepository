@@ -6,12 +6,11 @@ import objects.FileSystemObject;
 import objects.GenericObject;
 import objects.GoogleObject;
 import objects.SharepointObject;
+import structure.configuration.Configuration;
 import utils.Utils;
 
 import com.box.sdk.BoxAPIConnection;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-
-import configuration.Configuration;
 
 public class FileBuilder {
 	//common

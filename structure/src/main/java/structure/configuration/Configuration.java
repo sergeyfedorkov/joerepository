@@ -1,4 +1,4 @@
-package configuration;
+package structure.configuration;
 
 import java.io.BufferedReader;
 import java.io.File;

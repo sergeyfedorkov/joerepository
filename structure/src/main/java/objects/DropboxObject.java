@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import structure.Statistics;
+import structure.configuration.Configuration;
 import utils.Utils;
 
 import com.dropbox.core.DbxRequestConfig;
@@ -15,8 +16,6 @@ import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
 import com.dropbox.core.v2.team.TeamMemberInfo;
 import com.dropbox.core.v2.team.UserSelectorArg;
-
-import configuration.Configuration;
 
 public class DropboxObject extends GenericObject {
 	private static final long serialVersionUID = -547277363906329224L;

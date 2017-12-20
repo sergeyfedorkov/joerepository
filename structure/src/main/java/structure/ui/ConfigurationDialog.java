@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-import configuration.Configuration;
-import configuration.ConfigurationAnnotation;
+import structure.configuration.Configuration;
+import structure.configuration.ConfigurationAnnotation;
 
 public class ConfigurationDialog extends ConfigurationMeduimDialog {
 	public ConfigurationDialog(Shell parent) {

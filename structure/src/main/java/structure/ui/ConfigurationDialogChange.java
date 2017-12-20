@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import configuration.Configuration;
+import structure.configuration.Configuration;
 
 public class ConfigurationDialogChange extends GenericDialog {
 	private static final int HEIGHT = 65;

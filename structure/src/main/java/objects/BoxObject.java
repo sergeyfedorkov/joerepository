@@ -3,14 +3,13 @@ package objects;
 import java.io.ByteArrayInputStream;
 
 import structure.Statistics;
+import structure.configuration.Configuration;
 import utils.Utils;
 
 import com.box.sdk.BoxAPIConnection;
 import com.box.sdk.BoxFolder;
 import com.box.sdk.BoxItem;
 import com.box.sdk.BoxResource;
-
-import configuration.Configuration;
 
 public class BoxObject extends GenericObject{
 	private static final long serialVersionUID = -6407870180519307013L;

@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import structure.Statistics;
+import structure.configuration.Configuration;
 import utils.Utils;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
@@ -17,8 +18,6 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
-
-import configuration.Configuration;
 
 public class GoogleObject extends GenericObject {
 	private static final long serialVersionUID = 4368340431019705735L;

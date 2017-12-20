@@ -29,8 +29,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolItem;
 
-import configuration.Configuration;
-import configuration.ConfigurationAnnotation;
+import structure.configuration.Configuration;
+import structure.configuration.ConfigurationAnnotation;
 
 public class ConfigurationMeduimDialog extends GenericDialog {
 	protected static final int WIDTH = 530;

@@ -22,12 +22,12 @@ import org.xml.sax.InputSource;
 
 import structure.SoapParser;
 import structure.Statistics;
+import structure.configuration.Configuration;
 import utils.Utils;
 
 import com.microsoft.schemas.sharepoint.soap.GetListItems;
 import com.microsoft.schemas.sharepoint.soap.UpdateListItems;
 
-import configuration.Configuration;
 import connectors.ClaimsConnector;
 import connectors.ListsConnector;
 

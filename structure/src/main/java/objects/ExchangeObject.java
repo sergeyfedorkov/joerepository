@@ -1,7 +1,7 @@
 package objects;
 
-import configuration.Configuration;
 import structure.Statistics;
+import structure.configuration.Configuration;
 
 public class ExchangeObject extends GenericObject {
 	private static final long serialVersionUID = 1433225130072719515L;

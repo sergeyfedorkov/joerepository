@@ -3,10 +3,10 @@ package structure;
 import java.net.ProxySelector;
 
 import objects.GenericObject;
+import structure.configuration.Configuration;
 import structure.ui.ViewLogger;
 import utils.DebugProxySelector;
 import utils.Utils;
-import configuration.Configuration;
 import connectors.ClaimsConnector;
 import connectors.GoogleConnector;
 import connectors.api.DropboxConnectorApi;
