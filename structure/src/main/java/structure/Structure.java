@@ -102,7 +102,7 @@ public class Structure {
 	
 	public void start(GenericObject target){
 		if (configuration.isConsole()) {
-			Console.create(this, target);
+			ViewLogger.create(this, target);
 		} else {
 			call(target);
 		}
@@ -137,5 +137,9 @@ public class Structure {
 			if (Statistics.getInstance().end(configuration)) return;
 			new FileBuilder().parent(parent).path(configuration.getContentName(index, level)).statistics(Statistics.getInstance()).build().content();
 		}
+	}
+
+	public Configuration getConfiguration() {
+		return configuration;
 	}
 }

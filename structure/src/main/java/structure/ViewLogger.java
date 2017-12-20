@@ -25,7 +25,9 @@ import org.eclipse.swt.widgets.Text;
 
 import utils.Utils;
 
-public class Console extends Dialog {
+import com.google.common.io.Files;
+
+public class ViewLogger extends Dialog {
 	private static final int WIDTH = 900;
 	private static final int HEIGHT = 600;
 	
@@ -33,13 +35,14 @@ public class Console extends Dialog {
 	private GenericObject target;
 	private Text text; 
 
-	public Console(Shell parent) {
+	public ViewLogger(Shell parent) {
 		super(parent);
-		parent.setText("Console");
 	}
 	
 	public static Shell create(Structure structure, GenericObject target){
-		Console dialog = new Console(new Shell(Display.getCurrent(), SWT.DIALOG_TRIM | SWT.SYSTEM_MODAL));
+		Shell shell = new Shell(Display.getCurrent(), SWT.DIALOG_TRIM | SWT.SYSTEM_MODAL);
+		shell.setText(structure.getConfiguration().getTitle());
+		ViewLogger dialog = new ViewLogger(shell);
 		dialog.setStructure(structure);
 		dialog.setTarget(target);
 		return dialog.open();
@@ -88,19 +91,26 @@ public class Console extends Dialog {
 	}
 	
 	private int read(int count){
-		if (count != 10) return count;
-		if (text == null || text.isDisposed()) return 0;
+		if (count != 1) return count;
 		
 		try{
-			FileInputStream input = new FileInputStream(new File("structure_read.log"));
-			text.setText(Utils.getResultFromStream(input));
+			File file = new File(Utils.READ_FILE);
+			Files.copy(new File(Utils.MEDIUM_FILE), file);
+			
+			FileInputStream input = new FileInputStream(file);
+			Long available = (Long)text.getData();
+			String append = Utils.getResultFromStream(input, (available != null?available:0));
+			if (!append.isEmpty()){
+				text.append(append);
+				text.setData(file.length());
+			}
 		}catch(Exception ee){}
 		return 0;
 	}
 	
 	private void changeOut(){
 		try {
-			System.setOut(new PrintStream(new FileOutputStream(new File("structure.log"))));
+			System.setOut(new PrintStream(new FileOutputStream(new File(Utils.WRITE_FILE))));
 		} catch (FileNotFoundException e) {}
 	}
 	
@@ -108,16 +118,8 @@ public class Console extends Dialog {
 		shell.setLocation(Toolkit.getDefaultToolkit().getScreenSize().width/2 - shell.getSize().x/2, Toolkit.getDefaultToolkit().getScreenSize().height/2 - shell.getSize().y/2);
 	}
 
-	public Structure getStructure() {
-		return structure;
-	}
-
 	public void setStructure(Structure structure) {
 		this.structure = structure;
-	}
-
-	public GenericObject getTarget() {
-		return target;
 	}
 
 	public void setTarget(GenericObject target) {

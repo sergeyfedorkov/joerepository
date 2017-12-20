@@ -95,8 +95,8 @@ public class Configuration{
 	@ConfigurationAnnotation(type = "Other Options", name="Enable Proxy")
 	private boolean proxy;
 	
-	@ConfigurationAnnotation(type = "Other Options", name="Print to Console")
-	private boolean console = true;
+	@ConfigurationAnnotation(type = "Other Options", name="Print to View")
+	private boolean view = true;
 	
 	public Configuration(String name){
 		this.name=name;
@@ -315,7 +315,7 @@ public class Configuration{
 	}
 	
 	public boolean isConsole() {
-		return console;
+		return view;
 	}
 	
 	public long lastRan() {

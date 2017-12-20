@@ -1,6 +1,5 @@
 package utils;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,21 +9,21 @@ import com.google.common.io.Files;
 
 public class Utils {
 	public static final String SEPARATOR = "/";
+	public static final String WRITE_FILE = "process/structure_write.log";
+	public static final String MEDIUM_FILE = "process/structure_medium.log";
+	public static final String READ_FILE = "process/structure_read.log";
 	
 	public static void breakline(){
 		print("\n");
 	}
 	
 	public static void print(String print){
-						try {
-							System.out.write(print.getBytes());
-							new File("structure_read.log").delete();
-							Files.copy(new File("structure.log"), new File("structure_read.log"));
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
+		try {
+			System.out.write(print.getBytes());
+			Files.copy(new File(WRITE_FILE), new File(MEDIUM_FILE));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void print(String path, String target, String result){
@@ -61,20 +60,22 @@ public class Utils {
 		}
 	}
 	
-	public static String getResultFromStream(InputStream stream) throws IOException{
-		try{
-			String line;
-			StringBuffer lines = new StringBuffer();
+	public static String getResultFromStream(InputStream stream, long skip){
+		InputStreamReader isr = new InputStreamReader(stream);
+		final int bufferSize = 1024;
+		char[] buffer = new char[bufferSize];
+		StringBuffer strBuffer = new StringBuffer();
+
+		try {
+			if (skip != 0) isr.skip(skip);
 			
-			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-			while((line = reader.readLine()) != null ) lines.append(line).append("\n");
-			return lines.toString();
-		} finally {
-			try{
-				if (stream != null) stream.close();
-			} catch(Exception e1) {
-				e1.printStackTrace();
-			}
-		}
+		    while (true) {
+		        int read = isr.read(buffer, 0, bufferSize);
+		        if (read == -1) break;
+		        strBuffer.append(buffer, 0, read);
+		     }
+		} catch (IOException e) {}
+		
+		return strBuffer.toString();
 	}
 }

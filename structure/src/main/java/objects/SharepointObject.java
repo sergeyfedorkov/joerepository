@@ -233,7 +233,7 @@ public class SharepointObject extends GenericObject {
 		    out.write(new byte[]{});
 
 			InputStream stream = ((HttpURLConnection)conn).getInputStream();
-			String result = Utils.getResultFromStream(stream);
+			String result = Utils.getResultFromStream(stream, 0);
 			JSONObject json = new JSONObject(result);
 			JSONObject d = json.getJSONObject("d");
 			JSONObject webInformation = d.getJSONObject("GetContextWebInformation");
