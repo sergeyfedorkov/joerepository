@@ -1,14 +1,19 @@
 package configuration;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -16,10 +21,11 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 public class ConfigurationDialog extends ConfigurationMeduimDialog {
 	public ConfigurationDialog(Shell parent) {
@@ -37,14 +43,14 @@ public class ConfigurationDialog extends ConfigurationMeduimDialog {
 		centerOnScreen(dialog);
 		dialog.open();
 		
-		if (getConfigurations().size() == 0) changeName.notifyListeners(SWT.Selection, null);
+		if (getConfigurations().size() == 0) change.notifyListeners(SWT.Selection, null);
 		
 		Display display = dialog.getDisplay();
 		while (!dialog.isDisposed()) {
 			if (!display.readAndDispatch()) display.sleep();
 		}
 		
-		return configuration;
+		return configuration != null?configuration.mark():null;
 	}
 	
 	private void load(){
@@ -99,20 +105,34 @@ public class ConfigurationDialog extends ConfigurationMeduimDialog {
 			public void widgetDefaultSelected(SelectionEvent e) {}
 		});
 		
-		add = new Button(comboComposite, SWT.PUSH);
-		add.setText("Add");
-		add.addSelectionListener(new SelectionListener(){
+		ToolBar toolBar = new ToolBar(comboComposite, SWT.FLAT | SWT.NO_FOCUS);
+		
+		change = new ToolItem(toolBar, SWT.NONE);
+		change.setToolTipText("Change Name");
+		change.addSelectionListener(new SelectionListener(){
 			public void widgetSelected(SelectionEvent e) {
-				createConfiguration(true);
-				changeName.notifyListeners(SWT.Selection, null);
+				Configuration configuration = getConfiguration();
+				rename(new ConfigurationDialogChange(new Shell(getParent(), SWT.DIALOG_TRIM | SWT.SYSTEM_MODAL)).open(configuration), configuration);
 				validate();
 			}
 
 			public void widgetDefaultSelected(SelectionEvent e) {}
 		});
 		
-		delete = new Button(comboComposite, SWT.PUSH);
-		delete.setText("Delete");
+		add = new ToolItem(toolBar, SWT.NONE);
+		add.setToolTipText("Add Configuration");
+		add.addSelectionListener(new SelectionListener(){			
+			public void widgetSelected(SelectionEvent e) {
+				createConfiguration(true);
+				change.notifyListeners(SWT.Selection, null);
+				validate();
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {}
+		});
+		
+		delete = new ToolItem(toolBar, SWT.NONE);
+		delete.setToolTipText("Delete Configuration");
 		delete.setEnabled(getConfigurations().size() != 0);
 		delete.addSelectionListener(new SelectionListener(){
 			public void widgetSelected(SelectionEvent e) {
@@ -122,7 +142,7 @@ public class ConfigurationDialog extends ConfigurationMeduimDialog {
 					combo.remove(combo.indexOf(configuration.getName()));
 					
 					boolean add = createConfiguration(combo.getItemCount() == 0);
-					if (add) changeName.notifyListeners(SWT.Selection, null);
+					if (add) change.notifyListeners(SWT.Selection, null);
 					validate();
 				}
 			}
@@ -130,19 +150,9 @@ public class ConfigurationDialog extends ConfigurationMeduimDialog {
 			public void widgetDefaultSelected(SelectionEvent e) {}
 		});
 		
-		changeName = new Button(comboComposite, SWT.PUSH);
-		changeName.setText("Change Name");
-		changeName.addSelectionListener(new SelectionListener(){
-			public void widgetSelected(SelectionEvent e) {
-				Configuration configuration = getConfiguration();
-				rename(new ConfigurationDialogChange(new Shell(getParent(), SWT.DIALOG_TRIM | SWT.SYSTEM_MODAL)).open(configuration), configuration);
-				validate();
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {}
-		});
-				
+		setupIcons();
 		load();
+		
 		new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		populate(parent);
 		new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -152,16 +162,17 @@ public class ConfigurationDialog extends ConfigurationMeduimDialog {
 	}
 	
 	private void populate(Composite parent){
-		Map<String, Group> groups = createGroups(getConfiguration(), parent);
+		Map<String, Composite> groups = createGroups(getConfiguration(), parent);
 		options = new ArrayList<Control>();
 		
-		for (Field field:getConfiguration().getFields()){
-			Group group = groups.get(((ConfigurationAnnotation)field.getAnnotation(ConfigurationAnnotation.class)).type());
-			new Label(group, SWT.NONE).setText(((ConfigurationAnnotation)field.getAnnotation(ConfigurationAnnotation.class)).name()+":");
+		for (Field field:getViewFields(getConfiguration())){
+			Composite group = groups.get(((ConfigurationAnnotation)field.getAnnotation(ConfigurationAnnotation.class)).type());
+			String name = ((ConfigurationAnnotation)field.getAnnotation(ConfigurationAnnotation.class)).name();
 			
 			Control control = null;
 			if (field.getGenericType().toString().equals("boolean")){
 				control = new Button(group, SWT.CHECK);
+				((Button)control).setText(name+"       ");
 				((Button)control).addSelectionListener(new SelectionListener(){
 					public void widgetSelected(SelectionEvent e) {
 						getConfiguration().setFieldValue(field, ((Button)e.widget).getSelection());
@@ -171,6 +182,8 @@ public class ConfigurationDialog extends ConfigurationMeduimDialog {
 					public void widgetDefaultSelected(SelectionEvent e) {}
 				});
 			} else {
+				new Label(group, SWT.NONE).setText(name+":");
+				
 				control = new Text(group, SWT.BORDER);
 				((Text)control).setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 				((Text)control).addModifyListener(new ModifyListener(){

@@ -97,5 +97,10 @@
     <artifactId>text</artifactId>
     <version>3.3.0-v20070606-0010</version>
 </dependency>
+<dependency>
+    <groupId>org.eclipse.ui</groupId>
+    <artifactId>console</artifactId>
+    <version>3.1.100-v20060605</version>
+</dependency>
   </dependencies> 
 </project>

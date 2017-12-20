@@ -6,15 +6,25 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import com.google.common.io.Files;
+
 public class Utils {
 	public static final String SEPARATOR = "/";
 	
 	public static void breakline(){
-		System.out.print("\n");
+		print("\n");
 	}
 	
 	public static void print(String print){
-		System.out.print(print);
+						try {
+							System.out.write(print.getBytes());
+							new File("structure_read.log").delete();
+							Files.copy(new File("structure.log"), new File("structure_read.log"));
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
 	}
 	
 	public static void print(String path, String target, String result){
@@ -31,10 +41,12 @@ public class Utils {
 	}
 	
 	private static void out(String path, String result, int count){
-		for (int i=0;i<count;i++) System.out.print("-");
+		StringBuffer buffer = new StringBuffer();
+		for (int i=0;i<count;i++) buffer.append("-");
 		
-		System.out.print(path.substring(count, path.length()));
-		if (result != null) System.out.print(result);
+		buffer.append(path.substring(count, path.length()));
+		if (result != null) buffer.append(result);
+		print(buffer.toString());
 	}
 	
 	public static String apply(String path){

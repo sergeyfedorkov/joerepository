@@ -10,7 +10,7 @@ import utils.Utils;
 
 public abstract class OverloadHandler{
 	private static final String TOO_MANY_REQUESTS = "429";
-	private static final int DELAYES[] = new int[]{2, 2, 2, 2};
+	private static final int DELAYES[] = new int[]{2, 2, 10, 10, 15, 15};
 	private Statistics statistics;
 	private boolean print;
 	
@@ -41,7 +41,6 @@ public abstract class OverloadHandler{
 			if (print) Utils.print((error != null?error+" - ":""));
 			return false;
 		} catch (Exception e){
-			e.printStackTrace();
 			if (e.getMessage().indexOf(TOO_MANY_REQUESTS) != -1 && index<DELAYES.length){
 				if (print) Utils.print("(429) - ");
 				

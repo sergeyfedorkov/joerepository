@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -18,7 +19,6 @@ public class Configuration{
 	public static final String STORE = "configurations";
 	public static final String EXTENSION = ".conf";
 	public static final String NEW = "";
-	//public static final String UNSAVED = " (unsaved)";
 	
 	private static final String PLACEHOLDER_LEVEL = "%level%";
 	private static final String PLACEHOLDER_INDEX = "%index%";
@@ -31,6 +31,7 @@ public class Configuration{
 	private static int MAX = 100;
 	
 	private String name = "";
+	private long lastRan;
 	
 	//#configuration of the target server
 	@ConfigurationAnnotation(type="Configuration of the Target Server", name="Site Url")
@@ -127,7 +128,7 @@ public class Configuration{
 				field.setAccessible(true);
 				
 				if (field.getType().getTypeName().equals("boolean")){
-					field.set(configuration, Boolean.TRUE);
+					field.set(configuration, Boolean.parseBoolean(split[1]));
 				} else if (field.getType().getTypeName().equals("int")){
 					field.set(configuration, Integer.parseInt(split[1]));
 				} else if (field.getType().getTypeName().equals("long")){
@@ -148,6 +149,11 @@ public class Configuration{
 	public Configuration delete(){
 		new File(Configuration.STORE+Utils.SEPARATOR+getName()+EXTENSION).delete();
 		return this;
+	}
+	
+	public Configuration mark(){
+		lastRan = new Date().getTime();
+		return save();
 	}
 	
 	public Configuration save(){
@@ -308,6 +314,14 @@ public class Configuration{
 		return proxy;
 	}
 	
+	public boolean isConsole() {
+		return console;
+	}
+	
+	public long lastRan() {
+		return lastRan;
+	}
+	
 	public String getContentName(int index, int level){
 		return contentFormat.replaceAll(PLACEHOLDER_LEVEL, "level "+level).replaceAll(PLACEHOLDER_INDEX, index+"");
 	}
@@ -388,12 +402,7 @@ public class Configuration{
 				if (Long.parseLong(value.toString()) == 0) continue;
 			}
 		
-			if (value instanceof Boolean){
-				if ((Boolean)value){
-					buffer.append(field.getName());
-					buffer.append("\n");
-				}
-			} else if (!value.toString().isEmpty()){
+			if (!value.toString().isEmpty()){
 				buffer.append(field.getName()+"="+value);
 				buffer.append("\n");
 			}

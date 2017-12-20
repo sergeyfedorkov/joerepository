@@ -2,6 +2,8 @@ package configuration;
 
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,9 +12,11 @@ import java.util.Map;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -24,6 +28,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.ToolItem;
 
 public class ConfigurationMeduimDialog extends Dialog {
 	protected static final int WIDTH = 530;
@@ -31,9 +36,9 @@ public class ConfigurationMeduimDialog extends Dialog {
 	protected Configuration configuration;
 	
 	protected Button save;
-	protected Button delete;
-	protected Button add;
-	protected Button changeName;
+	protected ToolItem delete;
+	protected ToolItem add;
+	protected ToolItem change;
 	protected Combo combo;
 	protected Label status;
 	
@@ -73,21 +78,52 @@ public class ConfigurationMeduimDialog extends Dialog {
 		return comboComposite;
 	}
 	
-	protected Map<String, Group> createGroups(Configuration configuration, Composite parent){
-		Map<String, Group> groups = new HashMap<String, Group>();
+	protected Map<String, Composite> createGroups(Configuration configuration, Composite parent){
+		Map<String, Composite> groups = new HashMap<String, Composite>();
 		
-		for (Field field:configuration.getFields()){
-			String type = ((ConfigurationAnnotation)field.getAnnotation(ConfigurationAnnotation.class)).type();
-			if (groups.containsKey(type)) continue;
+		for (Field field:getViewFields(configuration)){
+			ConfigurationAnnotation annotation = field.getAnnotation(ConfigurationAnnotation.class);
+			if (annotation == null) continue;
 			
-			Group group = new Group(parent, SWT.NONE);
-			group.setLayoutData(new GridData(GridData.FILL_BOTH));
-			group.setLayout(new GridLayout(type.equalsIgnoreCase("Other Options")?6:2, false));
-			group.setText(type);
-			groups.put(type, group);
+			String type = annotation.type();
+			if (groups.containsKey(type)) continue;
+
+			groups.put(type, createGroupComposite(parent, type));
 		}
 		
 		return groups;
+	}
+	
+	private Composite createGroupComposite(Composite parent, String type){
+		if (type.equalsIgnoreCase("Other Options")){
+			Group group = new Group(parent, SWT.NONE);
+			group.setLayoutData(new GridData(GridData.FILL_BOTH));
+			group.setLayout(new GridLayout(3, false));
+			group.setText(type);
+			
+//			Composite composite = new Composite(group, SWT.NONE);
+//			composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+//			composite.setLayout(new GridLayout(3, false));
+//			return composite;
+			return group;
+		} else {
+			Group group = new Group(parent, SWT.NONE);
+			group.setLayoutData(new GridData(GridData.FILL_BOTH));
+			group.setLayout(new GridLayout(2, false));
+			group.setText(type);
+			return group;
+		}
+	}
+	
+	protected List<Field> getViewFields(Configuration configuration){
+		List<Field> fields = new ArrayList<Field>();
+		for (Field field:configuration.getFields()){
+			ConfigurationAnnotation annotation = field.getAnnotation(ConfigurationAnnotation.class);
+			if (annotation == null) continue;
+			fields.add(field);
+		}
+		
+		return fields;
 	}
 	
 	protected void createStatusControls(Shell parent){
@@ -137,8 +173,18 @@ public class ConfigurationMeduimDialog extends Dialog {
 	}
 	
 	protected List<Configuration> getConfigurations(){
+		long lastRan = 0;
 		List<Configuration> configurations = new ArrayList<Configuration>();
-		for (File file:new File(Configuration.STORE).listFiles()) configurations.add(Configuration.load(file));
+		
+		for (File file:new File(Configuration.STORE).listFiles()) {
+			Configuration configuration = Configuration.load(file);
+			if (configuration.lastRan()>lastRan) {
+				lastRan = configuration.lastRan();
+				configurations.add(0, configuration);
+			} else {
+				configurations.add(configuration);
+			}
+		}
 		return configurations;
 	}
 	
@@ -150,6 +196,21 @@ public class ConfigurationMeduimDialog extends Dialog {
 		combo.add(newConfiguration.getName(), index);
 		combo.setData(newConfiguration.getName(), newConfiguration);
 		combo.select(index);
+	}
+	
+	protected void setupIcons(){
+		try {
+			change.setImage(ImageDescriptor.createFromImageData(new ImageData(new FileInputStream(new File("icons/change16.ico")))).createImage());
+		} catch (FileNotFoundException e1) {}
+		
+		
+		try {
+			add.setImage(ImageDescriptor.createFromImageData(new ImageData(new FileInputStream(new File("icons/plus16.ico")))).createImage());
+		} catch (FileNotFoundException e1) {}
+		
+		try {
+			delete.setImage(ImageDescriptor.createFromImageData(new ImageData(new FileInputStream(new File("icons/minus16.ico")))).createImage());
+		} catch (FileNotFoundException e1) {}
 	}
 	
 	protected void validate(){

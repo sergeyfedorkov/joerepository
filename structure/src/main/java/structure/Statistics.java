@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import utils.Utils;
 import configuration.Configuration;
 
 public class Statistics {
@@ -23,19 +24,22 @@ public class Statistics {
 	}
 	
 	public void print(){
-		System.out.println("\nStatistics:");
+		Utils.print("\nStatistics:\n");
 		
 		if (folders.size() != 0){
 			long foldersAvarage = (long)folders.stream().mapToLong(p -> p.longValue()).average().getAsDouble();
-			System.out.println("Number of Folders: "+folders.size()+". Average time: "+getTimeElapsed(foldersAvarage));
+			Utils.print("Number of Folders: "+folders.size()+". Average time: "+getTimeElapsed(foldersAvarage));
+			Utils.breakline();
 		}
 		
 		if (documents.size() != 0) {
 			long documentsAvarage = (long)documents.stream().mapToLong(p -> p.longValue()).average().getAsDouble();;
-			System.out.println("Number of Documents: "+documents.size()+". Average time: "+getTimeElapsed(documentsAvarage));
+			Utils.print("Number of Documents: "+documents.size()+". Average time: "+getTimeElapsed(documentsAvarage));
+			Utils.breakline();
 		}
 		
-		System.out.println("Total time consumed: "+getTimeElapsed(new Date().getTime()-startDate.getTime()));
+		Utils.print("Total time consumed: "+getTimeElapsed(new Date().getTime()-startDate.getTime()));
+		Utils.breakline();
 	}
 	
 	public static String getTimeElapsed(long elapsed){
