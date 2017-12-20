@@ -314,8 +314,16 @@ public class Configuration{
 		return proxy;
 	}
 	
-	public boolean isConsole() {
+	public boolean isView() {
 		return view;
+	}
+	
+	public boolean isStructure(){
+		return deep != 0 && folders != 0 && documents != 0 && size != 0;
+	}
+	
+	public boolean isTotalStructure(){
+		return totalFolders != 0 && totalDocuments != 0 && totalSize != null && !totalSize.isEmpty();
 	}
 	
 	public long lastRan() {
@@ -345,14 +353,6 @@ public class Configuration{
 		return null;
 	}
 	
-	public boolean isStructure(){
-		return deep != 0 && folders != 0 && documents != 0 && size != 0;
-	}
-	
-	public boolean isTotalStructure(){
-		return totalFolders != 0 && totalDocuments != 0 && totalSize != null && !totalSize.isEmpty();
-	}
-
 	public int getTotalFolders() {
 		return totalFolders;
 	}

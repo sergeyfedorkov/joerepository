@@ -101,7 +101,7 @@ public class Structure {
 	}
 	
 	public void start(GenericObject target){
-		if (configuration.isConsole()) {
+		if (configuration.isView()) {
 			ViewLogger.create(this, target);
 		} else {
 			call(target);
