@@ -36,6 +36,8 @@ public class ConfigurationMeduimDialog extends Dialog {
 	protected Configuration configuration;
 	
 	protected Button save;
+	protected Button saveAndRun;
+	
 	protected ToolItem delete;
 	protected ToolItem add;
 	protected ToolItem change;
@@ -100,11 +102,6 @@ public class ConfigurationMeduimDialog extends Dialog {
 			group.setLayoutData(new GridData(GridData.FILL_BOTH));
 			group.setLayout(new GridLayout(3, false));
 			group.setText(type);
-			
-//			Composite composite = new Composite(group, SWT.NONE);
-//			composite.setLayoutData(new GridData(GridData.FILL_BOTH));
-//			composite.setLayout(new GridLayout(3, false));
-//			return composite;
 			return group;
 		} else {
 			Group group = new Group(parent, SWT.NONE);
@@ -129,7 +126,7 @@ public class ConfigurationMeduimDialog extends Dialog {
 	protected void createStatusControls(Shell parent){
 		Composite statusComposite = new Composite(parent, SWT.NONE);
 		statusComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		statusComposite.setLayout(new GridLayout(4, false));
+		statusComposite.setLayout(new GridLayout(5, false));
 		((GridData)statusComposite.getLayoutData()).grabExcessHorizontalSpace = true;
 		((GridLayout)statusComposite.getLayout()).marginTop=-5;
 		((GridLayout)statusComposite.getLayout()).marginRight=-5;
@@ -147,11 +144,18 @@ public class ConfigurationMeduimDialog extends Dialog {
 		save.setText("Save");
 		save.addSelectionListener(new SelectionListener(){
 			public void widgetSelected(SelectionEvent e) {
-				Configuration configuration = getConfiguration().save();
-				if (action()) {
-					setConfiguration(configuration);
-					parent.close();
-				}
+				getConfiguration().save();
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {}
+		});
+		
+		saveAndRun = new Button(statusComposite, SWT.NONE);
+		saveAndRun.setText("Save and Run");
+		saveAndRun.addSelectionListener(new SelectionListener(){
+			public void widgetSelected(SelectionEvent e) {
+				setConfiguration(getConfiguration().save());
+				parent.close();
 			}
 
 			public void widgetDefaultSelected(SelectionEvent e) {}
@@ -218,6 +222,7 @@ public class ConfigurationMeduimDialog extends Dialog {
 		getParent().setText(result == null?getConfiguration().getTitle():"Not Valid");
 		
 		save.setEnabled(result == null);
+		saveAndRun.setEnabled(result == null);
 		
 		status.setText(result != null?result:"");
 		status.pack();
@@ -228,11 +233,6 @@ public class ConfigurationMeduimDialog extends Dialog {
 		return dialog.open() == 0;
 	}
 	
-	protected boolean action(){
-		MessageDialog dialog = new MessageDialog(getParent(), "Select Action", null, "Configuration is saved. Do you want to run it?", MessageDialog.QUESTION, new String[] {IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL}, IDialogConstants.YES_ID);
-		return dialog.open() == 0;
-	}
-
 	public void setConfiguration(Configuration configuration) {
 		this.configuration = configuration;
 	}
