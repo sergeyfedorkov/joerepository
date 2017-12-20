@@ -54,7 +54,7 @@ public class Configuration{
 	private String target = "library";
 
 	//#configuration of the structure to be created
-	@ConfigurationAnnotation(type="Configuration of the structure to be created", name="Deep")
+	@ConfigurationAnnotation(type="Configuration of the structure to be created", name="Deep (count of levels)")
 	private int deep = 2;
 	
 	@ConfigurationAnnotation(type="Configuration of the structure to be created", name="Containers count on level")
@@ -334,7 +334,7 @@ public class Configuration{
 		boolean configurationNameResult = name != null && !name.isEmpty();
 		boolean targetServerResult = (isSharepoint() ^ isDropbox() ^ isBox() ^ isGoogle() ^ isExchange()) || isFileSystem();
 		boolean targetLocationResult = target != null && !target.isEmpty();
-		boolean targetStructureResult = (deep != 0 && folders != 0 && documents != 0 && size != 0) ^ (totalFolders != 0 && totalDocuments != 0 && totalSize != null && !totalSize.isEmpty());
+		boolean targetStructureResult = isStructure() ^ isTotalStructure();
 		boolean targetFormatResult = contentFormat != null && !contentFormat.isEmpty() && containerFormat != null && !containerFormat.isEmpty();
 		
 		if (!configurationNameResult) return "Enter Configuration name or select an existing one";
@@ -343,6 +343,14 @@ public class Configuration{
 		if (!targetStructureResult) return "Configuration of the Target Structure is not valid";
 		if (!targetFormatResult) return "Configuration of the Target Format is not valid";
 		return null;
+	}
+	
+	public boolean isStructure(){
+		return deep != 0 && folders != 0 && documents != 0 && size != 0;
+	}
+	
+	public boolean isTotalStructure(){
+		return totalFolders != 0 && totalDocuments != 0 && totalSize != null && !totalSize.isEmpty();
 	}
 
 	public int getTotalFolders() {

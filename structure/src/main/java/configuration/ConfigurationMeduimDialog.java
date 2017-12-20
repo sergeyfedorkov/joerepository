@@ -74,7 +74,7 @@ public class ConfigurationMeduimDialog extends Dialog {
 		comboComposite.setLayout(new GridLayout(6, false));
 		comboComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		((GridLayout)comboComposite.getLayout()).marginLeft=-5;
-		((GridLayout)comboComposite.getLayout()).marginRight=-10;
+		((GridLayout)comboComposite.getLayout()).marginRight=-20;
 		((GridLayout)comboComposite.getLayout()).marginTop=-5;
 		((GridLayout)comboComposite.getLayout()).marginBottom=-5;
 		return comboComposite;
