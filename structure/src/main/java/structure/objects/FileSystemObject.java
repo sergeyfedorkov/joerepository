@@ -1,4 +1,4 @@
-package objects;
+package structure.objects;
 
 import java.io.File;
 import java.io.FileOutputStream;

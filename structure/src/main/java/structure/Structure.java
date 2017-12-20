@@ -2,8 +2,8 @@ package structure;
 
 import java.net.ProxySelector;
 
-import objects.GenericObject;
 import structure.configuration.Configuration;
+import structure.objects.GenericObject;
 import structure.ui.ViewLogger;
 import utils.DebugProxySelector;
 import utils.Utils;

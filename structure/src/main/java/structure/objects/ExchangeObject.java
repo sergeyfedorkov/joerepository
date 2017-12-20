@@ -1,4 +1,4 @@
-package objects;
+package structure.objects;
 
 import structure.Statistics;
 import structure.configuration.Configuration;

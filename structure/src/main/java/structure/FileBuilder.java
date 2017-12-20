@@ -1,12 +1,12 @@
 package structure;
 
-import objects.BoxObject;
-import objects.DropboxObject;
-import objects.FileSystemObject;
-import objects.GenericObject;
-import objects.GoogleObject;
-import objects.SharepointObject;
 import structure.configuration.Configuration;
+import structure.objects.BoxObject;
+import structure.objects.DropboxObject;
+import structure.objects.FileSystemObject;
+import structure.objects.GenericObject;
+import structure.objects.GoogleObject;
+import structure.objects.SharepointObject;
 import utils.Utils;
 
 import com.box.sdk.BoxAPIConnection;

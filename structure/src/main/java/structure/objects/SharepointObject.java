@@ -1,4 +1,4 @@
-package objects;
+package structure.objects;
 
 import java.io.IOException;
 import java.io.InputStream;

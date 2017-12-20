@@ -1,4 +1,4 @@
-package objects;
+package structure.objects;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;

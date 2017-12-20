@@ -7,8 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
-import objects.GenericObject;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -25,6 +23,7 @@ import org.eclipse.swt.widgets.Text;
 
 import structure.Statistics;
 import structure.Structure;
+import structure.objects.GenericObject;
 import utils.Utils;
 
 import com.google.common.io.Files;
