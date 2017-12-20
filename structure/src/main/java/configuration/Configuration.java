@@ -365,6 +365,13 @@ public class Configuration{
 		return totalSize;
 	}
 	
+	public int getTotalCount(){
+		long result = 0;
+		for (int i=0;i<getDeep();i++) result+=Math.pow(getFolders(), i+1);
+		result = result+getDocuments()+getDocuments()*result;
+		return (int)result;
+	}
+	
 	public boolean setFieldValue(Field field, Object value){
 		try{
 			if (field.getGenericType().toString().equals("int")){
@@ -450,5 +457,9 @@ public class Configuration{
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+	
+	public void clear(){
+		for (File file:new File(Utils.LOG_FOLDER).listFiles()) file.delete();
 	}
 }

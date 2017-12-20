@@ -20,6 +20,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -34,6 +35,7 @@ public class ViewLogger extends Dialog {
 	private Structure structure;
 	private GenericObject target;
 	private Text text; 
+	private ProgressBar bar;
 
 	public ViewLogger(Shell parent) {
 		super(parent);
@@ -63,12 +65,17 @@ public class ViewLogger extends Dialog {
 		Display display = dialog.getDisplay();
 		while (!dialog.isDisposed()) {
 			count = read(++count);
+			bar.setSelection((int)Statistics.getInstance().currentProcess());
 			if (!display.readAndDispatch()) display.sleep();
 		}
 		return dialog;
 	}
 	
 	private void createContent(Shell parent){
+		bar = new ProgressBar(parent, SWT.NONE);
+		bar.setMaximum(structure.getConfiguration().getTotalCount());
+		bar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
 		text = new Text(parent, SWT.MULTI | SWT.V_SCROLL);
 		text.setLayoutData(new GridData(GridData.FILL_BOTH));
 		text.addModifyListener(new ModifyListener(){

@@ -30,6 +30,7 @@ public class Structure {
 		if (configuration == null) return;
 		if (configuration.isProxy()) ProxySelector.setDefault(new DebugProxySelector());
 		
+		configuration.clear();
 		if (configuration.isSharepoint()){
 			sharepoint();
 		} else if (configuration.isDropbox()){

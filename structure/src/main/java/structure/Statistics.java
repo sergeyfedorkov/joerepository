@@ -42,6 +42,13 @@ public class Statistics {
 		Utils.breakline();
 	}
 	
+	public long currentProcess(){
+		long result = 0;
+		if (folders.size() != 0) result+=folders.size();
+		if (documents.size() != 0) result+=documents.size();
+		return result; 
+	}
+	
 	public static String getTimeElapsed(long elapsed){
         long milliseconds = elapsed % 1000;
         elapsed = elapsed / 1000;

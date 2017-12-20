@@ -9,9 +9,10 @@ import com.google.common.io.Files;
 
 public class Utils {
 	public static final String SEPARATOR = "/";
-	public static final String WRITE_FILE = "process/structure_write.log";
-	public static final String MEDIUM_FILE = "process/structure_medium.log";
-	public static final String READ_FILE = "process/structure_read.log";
+	public static final String LOG_FOLDER = "process";
+	public static final String WRITE_FILE = LOG_FOLDER+SEPARATOR+"structure_write.log";
+	public static final String MEDIUM_FILE = LOG_FOLDER+SEPARATOR+"structure_medium.log";
+	public static final String READ_FILE = LOG_FOLDER+SEPARATOR+"structure_read.log";
 	
 	public static void breakline(){
 		print("\n");
@@ -21,9 +22,7 @@ public class Utils {
 		try {
 			System.out.write(print.getBytes());
 			Files.copy(new File(WRITE_FILE), new File(MEDIUM_FILE));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} catch (IOException e) {}
 	}
 	
 	public static void print(String path, String target, String result){
