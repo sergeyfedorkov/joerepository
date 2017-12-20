@@ -7,7 +7,7 @@ import java.util.Random;
 
 import structure.Statistics;
 import structure.configuration.Configuration;
-import utils.Utils;
+import structure.utils.Utils;
 
 public abstract class GenericObject extends File {
 	private static final long serialVersionUID = -6978073793316037363L;

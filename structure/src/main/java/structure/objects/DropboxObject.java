@@ -6,7 +6,7 @@ import java.util.List;
 
 import structure.Statistics;
 import structure.configuration.Configuration;
-import utils.Utils;
+import structure.utils.Utils;
 
 import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.v2.DbxClientV2;

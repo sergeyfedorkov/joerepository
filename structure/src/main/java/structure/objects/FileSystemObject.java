@@ -8,7 +8,7 @@ import java.util.Collections;
 
 import structure.Statistics;
 import structure.configuration.Configuration;
-import utils.Utils;
+import structure.utils.Utils;
 
 public class FileSystemObject extends GenericObject {
 	private static final long serialVersionUID = 265552533095450746L;

@@ -9,7 +9,7 @@ import java.util.List;
 
 import structure.Statistics;
 import structure.configuration.Configuration;
-import utils.Utils;
+import structure.utils.Utils;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.InputStreamContent;

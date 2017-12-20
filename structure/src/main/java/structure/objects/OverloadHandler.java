@@ -6,7 +6,7 @@ import javax.xml.ws.soap.SOAPFaultException;
 
 import structure.SoapParser;
 import structure.Statistics;
-import utils.Utils;
+import structure.utils.Utils;
 
 public abstract class OverloadHandler{
 	private static final String TOO_MANY_REQUESTS = "429";

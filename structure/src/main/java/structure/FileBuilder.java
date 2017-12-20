@@ -7,7 +7,7 @@ import structure.objects.FileSystemObject;
 import structure.objects.GenericObject;
 import structure.objects.GoogleObject;
 import structure.objects.SharepointObject;
-import utils.Utils;
+import structure.utils.Utils;
 
 import com.box.sdk.BoxAPIConnection;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;

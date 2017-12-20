@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import structure.configuration.Configuration;
-import utils.Utils;
+import structure.utils.Utils;
 
 public class Statistics {
 	private static Statistics instance = null;

@@ -23,7 +23,7 @@ import org.xml.sax.InputSource;
 import structure.SoapParser;
 import structure.Statistics;
 import structure.configuration.Configuration;
-import utils.Utils;
+import structure.utils.Utils;
 
 import com.microsoft.schemas.sharepoint.soap.GetListItems;
 import com.microsoft.schemas.sharepoint.soap.UpdateListItems;

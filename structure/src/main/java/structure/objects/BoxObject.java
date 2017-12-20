@@ -4,7 +4,7 @@ import java.io.ByteArrayInputStream;
 
 import structure.Statistics;
 import structure.configuration.Configuration;
-import utils.Utils;
+import structure.utils.Utils;
 
 import com.box.sdk.BoxAPIConnection;
 import com.box.sdk.BoxFolder;

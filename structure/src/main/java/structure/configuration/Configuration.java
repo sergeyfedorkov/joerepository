@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import structure.ui.ConfigurationDialog;
-import utils.Utils;
+import structure.utils.Utils;
 
 public class Configuration{
 	public static final String STORE = "configurations";

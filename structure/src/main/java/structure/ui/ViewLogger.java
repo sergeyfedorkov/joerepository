@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Text;
 import structure.Statistics;
 import structure.Structure;
 import structure.objects.GenericObject;
-import utils.Utils;
+import structure.utils.Utils;
 
 import com.google.common.io.Files;
 

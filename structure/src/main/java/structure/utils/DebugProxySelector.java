@@ -1,4 +1,4 @@
-package utils;
+package structure.utils;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

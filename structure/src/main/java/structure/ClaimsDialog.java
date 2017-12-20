@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import utils.WinInet;
+import structure.utils.WinInet;
 
 import com.sun.jna.WString;
 import com.sun.jna.ptr.IntByReference;
