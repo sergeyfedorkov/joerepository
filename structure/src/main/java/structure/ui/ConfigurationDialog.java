@@ -1,18 +1,14 @@
-package configuration;
+package structure.ui;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -26,10 +22,12 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import configuration.Configuration;
+import configuration.ConfigurationAnnotation;
+
 public class ConfigurationDialog extends ConfigurationMeduimDialog {
 	public ConfigurationDialog(Shell parent) {
 		super(parent);
-		setImage();
 	}
 	
 	public Configuration open() {
@@ -197,11 +195,5 @@ public class ConfigurationDialog extends ConfigurationMeduimDialog {
 			control.setData(field);
 			options.add(control);
 		}
-	}
-	
-	private void setImage(){
-		try{
-			getParent().setImage(ImageDescriptor.createFromImageData(new ImageData(new FileInputStream(new File("icons/logo.ico")))).createImage());
-		}catch(Exception e){}
 	}
 }

@@ -3,6 +3,7 @@ package structure;
 import java.net.ProxySelector;
 
 import objects.GenericObject;
+import structure.ui.ViewLogger;
 import utils.DebugProxySelector;
 import utils.Utils;
 import configuration.Configuration;

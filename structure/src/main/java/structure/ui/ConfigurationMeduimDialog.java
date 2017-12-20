@@ -1,4 +1,4 @@
-package configuration;
+package structure.ui;
 
 import java.awt.Toolkit;
 import java.io.File;
@@ -23,14 +23,16 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolItem;
 
-public class ConfigurationMeduimDialog extends Dialog {
+import configuration.Configuration;
+import configuration.ConfigurationAnnotation;
+
+public class ConfigurationMeduimDialog extends GenericDialog {
 	protected static final int WIDTH = 530;
 	
 	protected Configuration configuration;

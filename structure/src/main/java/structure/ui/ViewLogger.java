@@ -1,4 +1,4 @@
-package structure;
+package structure.ui;
 
 import java.awt.Toolkit;
 import java.io.File;
@@ -18,17 +18,18 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import structure.Statistics;
+import structure.Structure;
 import utils.Utils;
 
 import com.google.common.io.Files;
 
-public class ViewLogger extends Dialog {
+public class ViewLogger extends GenericDialog {
 	private static final int WIDTH = 900;
 	private static final int HEIGHT = 600;
 	

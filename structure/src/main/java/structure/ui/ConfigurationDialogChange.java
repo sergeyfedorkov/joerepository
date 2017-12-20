@@ -1,31 +1,26 @@
-package configuration;
+package structure.ui;
 
-import java.io.File;
-import java.io.FileInputStream;
-
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-public class ConfigurationDialogChange extends Dialog {
+import configuration.Configuration;
+
+public class ConfigurationDialogChange extends GenericDialog {
 	private static final int HEIGHT = 65;
 	private Button save;
 
 	public ConfigurationDialogChange(Shell parent) {
 		super(parent);
-		setImage();
 	}
 	
 	public String open(Configuration configuration) {
@@ -72,11 +67,5 @@ public class ConfigurationDialogChange extends Dialog {
 
 			public void widgetDefaultSelected(SelectionEvent e) {}
 		});
-	}
-	
-	private void setImage(){
-		try{
-			getParent().setImage(ImageDescriptor.createFromImageData(new ImageData(new FileInputStream(new File("icons/logo.ico")))).createImage());
-		}catch(Exception e){}
 	}
 }
